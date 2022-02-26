@@ -40,6 +40,8 @@ $(PROGRAM_NAME): $(Cpp_OBJ)
 
 all: 
 	make $(PROGRAM_NAME) 
+run:
+	./image_demo many_objects_1.pgm objects_output.pgm
 
 
 clean:

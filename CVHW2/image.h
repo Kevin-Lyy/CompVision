@@ -65,6 +65,8 @@ class Image {
 
 void grayToBin(int threshold, Image *an_image);
 
+void conRegions(Image *an_image);
+
 // Reads a pgm image from file input_filename.
 // an_image is the resulting image.
 // Returns true if  everyhing is OK, false otherwise.

@@ -8,6 +8,7 @@
 #include <cstring>
 #include <iostream>
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -61,7 +62,79 @@ void grayToBin(int threshold, Image *an_image) {
       }
     }
   }
+}
 
+void conRegions(Image *an_image) {
+  if (an_image == nullptr) abort();
+  const int num_rows = an_image->num_rows();
+  const int num_columns = an_image->num_columns();
+
+  grayToBin(120,an_image);
+  vector<int> equivList,changedList;
+  equivList.push_back(50);
+  changedList.push_back(50);
+  int top,left,place=0;
+  for(int i = 1;i < num_rows;i++){
+    for(int j = 1;j < num_columns;j++){
+      if(an_image->GetPixel(i,j) == 255){
+        top = an_image->GetPixel(i-1,j);
+        left = an_image->GetPixel(i,j-1);
+
+        //CHECK TO THE LEFT AND RIGHT IF THEY ARE BACKGROUND 
+        if(top == 0 && left == 0){
+          an_image->SetPixel(i,j,equivList[place]);
+          equivList.push_back(equivList[place]+1);
+          changedList.push_back(equivList[place]+1);
+          place++;
+        }
+        //IF LEFT AND TOP ARE DIFF VALUES
+        else if(top != left){
+          //TOP IS BACKGROUND
+          if(top == 0 && left != 0){
+            an_image->SetPixel(i,j,left);
+          }
+          // LEFT IS BACKGROUND
+          else if(left == 0 && top !=0 ){
+              an_image->SetPixel(i,j,top);
+          }
+          else{
+            if(top < left){
+              an_image->SetPixel(i,j,top);
+              for(int x = 0;x <equivList.size();x++){
+                if(equivList[x] == left){
+                  changedList[x] = top;
+                }
+              }
+            }
+            else{
+              an_image->SetPixel(i,j,left);
+              for(int x = 0;x <equivList.size();x++){
+                if(equivList[x] == top){
+                  changedList[x] = left;
+                }
+              }
+            }
+          }
+          
+        }
+        //TOP AND LEFT ARE THE SAME AND ARE NOT BACKROUND BUT DIFF FOREGROUND
+        else if(top == left && top != 0){
+          an_image->SetPixel(i,j,top);
+
+        }
+
+        
+      }
+
+    }
+  }  
+
+  for(int i = 0; i < changedList.size();i++){
+    // if(equivList[i] != changedList[i]){
+    //   cout <<"from " << equivList[i] << " to "<< changedList[i] << endl;
+    // }
+    cout << changedList[i] << endl;
+  }
 
 }
 

@@ -29,8 +29,13 @@ main(int argc, char **argv){
   // 200.
   // DrawLine(0, 0, 240, 260, 200,
 	//    &an_image); 
-  grayToBin(110,&an_image);
-  
+  //P1
+  //grayToBin(110,&an_image);
+
+
+  //P2
+  conRegions(&an_image);
+
   if (!WriteImage(output_file, an_image)){
     cout << "Can't write to file " << output_file << endl;
     return 0;

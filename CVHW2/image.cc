@@ -149,6 +149,47 @@ void conRegions(Image *an_image) {
     
 }
 
+void p3(Image *an_image){
+  conRegions(an_image);
+  vector<int> numObjects;
+
+  const int num_rows = an_image->num_rows();
+  const int num_columns = an_image->num_columns();
+  bool isin=false;
+
+  for(int i = 1;i < num_rows;i++){
+      for(int j = 1;j < num_columns;j++){
+
+        if(an_image->GetPixel(i,j) != 0){
+          for(int x = 0;x < numObjects.size();x++){
+            if( an_image->GetPixel(i,j) == numObjects[x]){
+              isin = true;
+            }
+          }
+          if(!isin){
+            numObjects.push_back(an_image->GetPixel(i,j));
+          }
+          isin = false;
+        }
+      }
+  }
+
+  vector<int> areaOfObjects(numObjects.size());
+  for(int i = 1;i < num_rows;i++){
+      for(int j = 1;j < num_columns;j++){
+        for(int x = 0;x < numObjects.size();x++){
+          if(an_image->GetPixel(i,j) == numObjects[x]){
+            areaOfObjects[x] = areaOfObjects[x]+1;
+          }
+        }
+      }
+  }
+
+  
+
+
+}
+
 bool ReadImage(const string &filename, Image *an_image) {  
   if (an_image == nullptr) abort();
   FILE *input = fopen(filename.c_str(),"rb");

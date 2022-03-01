@@ -41,7 +41,7 @@ $(PROGRAM_NAME): $(Cpp_OBJ)
 all: 
 	make $(PROGRAM_NAME) 
 run:
-	./image_demo two_objects.pgm objects_output.pgm
+	./image_demo many_objects_2.pgm objects_output.pgm
 
 
 clean:

@@ -184,9 +184,55 @@ void p3(Image *an_image){
         }
       }
   }
+  vector<int> mostLeft(numObjects.size()),mostTop(numObjects.size()),mostBottom(numObjects.size()),mostRight(numObjects.size());
 
-  
+  for(int i = 1;i < num_rows;i++){
+      for(int j = 1;j < num_columns;j++){
+        for(int x = 0;x < numObjects.size();x++){
+          if(an_image->GetPixel(i,j) == numObjects[x]){
+            if(i < mostTop[x] || mostTop[x] == 0){
+              mostTop[x] = i;
+            }
+            else if(i > mostBottom[x] || mostBottom[x] == 0){
+              mostBottom[x] = i;
+            }
+            if(j < mostLeft[x] || mostLeft[x] == 0){
+              mostLeft[x] = j;
+            }
+            else if(j > mostRight[x] || mostRight[x] == 0){
+              mostRight[x] = j;
+            }
+          }
+        }
+      }
+  }
 
+    // for(int i = 1;i < num_rows;i++){
+    //   for(int j = 1;j < num_columns;j++){
+    //     for(int x = 0;x < numObjects.size();x++){
+    //       if(j == mostRight[x])
+    //         an_image->SetPixel(i,j,255);
+    //       if(j == mostLeft[x])
+    //         an_image->SetPixel(i,j,255);
+    //       if(i == mostTop[x])
+    //         an_image->SetPixel(i,j,255);
+    //       if(i == mostBottom[x])
+    //         an_image->SetPixel(i,j,255);
+
+    //     }
+    //   }
+    // }
+
+    vector<int> centerColumn(numObjects.size()),centerRow(numObjects.size());
+    for(int i = 0; i < numObjects.size();i++){
+      centerColumn[i] = (mostTop[i] + mostBottom[i])/2;
+      centerRow[i] = (mostLeft[i] + mostRight[i])/2;
+    }
+    for(int i = 0; i < numObjects.size();i++){
+      cout << "center of item: " << numObjects[i] << " is (" << centerColumn[i] << "," << centerRow[i]<<")" << endl ;
+      an_image->SetPixel(centerColumn[i],centerRow[i],255);
+    }
+    
 
 }
 

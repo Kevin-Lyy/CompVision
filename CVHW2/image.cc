@@ -191,9 +191,9 @@ void p3(Image *an_image){
     for(int j = 1;j < num_columns;j++){
       for(int x = 0;x < numObjects.size();x++){
         if(an_image->GetPixel(i,j) == numObjects[x]){
-          centerColumn[x] = centerColumn[x] + i;
+          centerColumn[x] = centerColumn[x] + j;
           numCol[x] += 1;
-          centerRow[x] = centerRow[x] + j;
+          centerRow[x] = centerRow[x] + i;
           numRow[x] += 1;
         }
       }
@@ -206,8 +206,8 @@ void p3(Image *an_image){
   }   
 
   for(int i = 0; i < numObjects.size();i++){
-    cout << "center of item: " << numObjects[i] << " is (" << centerColumn[i] << "," << centerRow[i]<<")" << endl ;
-    an_image->SetPixel(centerColumn[i],centerRow[i],255);
+    //cout << "center of item: " << numObjects[i] << " is (" << centerColumn[i] << "," << centerRow[i]<<")" << endl ;
+    an_image->SetPixel(centerRow[i],centerColumn[i],255);
   }
 
 
@@ -252,6 +252,26 @@ void p3(Image *an_image){
     roundedness[x] = e_min[x]/e_max[x];
   }
 
+  vector<double> theta_degrees(numObjects.size());
+  for(int x = 0;x < numObjects.size();x++){
+    theta_degrees[x] = 180.0* theta1[x]/M_PI;
+  }
+
+  vector<double> orientation(numObjects.size());
+  for(int x = 0;x < numObjects.size();x++){
+    orientation[x] = 90.0 - theta_degrees[x];
+  }
+
+  for(int i = 0; i < numObjects.size();i++){
+    cout << numObjects[i] << " ";
+    cout << centerRow[i] << " ";
+    cout << centerColumn[i] << " ";
+    cout << e_min[i] << " ";
+    cout << areaOfObjects[i] << " ";
+    cout << roundedness[i] << " ";
+    cout << orientation[i] << " ";
+    cout << endl;
+  }
   //equation of the line 
   //xsin(0) - ycos(0) + p  = 0 
   //use center x y to find p 

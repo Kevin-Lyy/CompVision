@@ -218,8 +218,8 @@ void p3(Image *an_image){
       for(int x = 0;x < numObjects.size();x++){
         if(an_image->GetPixel(i,j) == numObjects[x]){
           a[x] = a[x] + pow((i-centerColumn[x]),2);
-          b[x] = b[x] + (i-centerColumn[x])*(i-centerRow[x]);
-          c[x] = c[x] + pow((i-centerRow[x]),2);
+          b[x] = b[x] + (i-centerColumn[x])*(j-centerRow[x]);
+          c[x] = c[x] + pow((j-centerRow[x]),2);
         }
       }
     }
@@ -245,12 +245,16 @@ void p3(Image *an_image){
 
   vector<double> e_max(numObjects.size());
   for(int x = 0;x < numObjects.size();x++){
-    e_min[x] = a[x] * sin(theta2[x]) * sin(theta2[x]) - b[x]*sin(theta2[x])*cos(theta2[x]) + c[x]*cos(theta2[x])*cos(theta2[x]);
+    e_max[x] = a[x] * sin(theta2[x]) * sin(theta2[x]) - b[x]*sin(theta2[x])*cos(theta2[x]) + c[x]*cos(theta2[x])*cos(theta2[x]);
   }
 
   vector<double> roundedness(numObjects.size());
   for(int x = 0;x < numObjects.size();x++){
     roundedness[x] = e_min[x]/e_max[x];
+  }
+
+  for(int x = 0;x < numObjects.size();x++){
+    cout << e_min[x] << endl;
   }
 
 }

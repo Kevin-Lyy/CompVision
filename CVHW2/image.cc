@@ -186,33 +186,32 @@ void p3(Image *an_image){
       }
   }
 
-    vector<int> centerColumn(numObjects.size()),centerRow(numObjects.size()),numCol(numObjects.size()),numRow((numObjects.size()));
-    for(int i = 1;i < num_rows;i++){
-      for(int j = 1;j < num_columns;j++){
-        for(int x = 0;x < numObjects.size();x++){
-          if(an_image->GetPixel(i,j) == numObjects[x]){
-           centerColumn[x] = centerColumn[x] + i;
-           numCol[x] += 1;
-           centerRow[x] = centerRow[x] + j;
-           numRow[x] += 1;
-          }
+  vector<int> centerColumn(numObjects.size()),centerRow(numObjects.size()),numCol(numObjects.size()),numRow((numObjects.size()));
+  for(int i = 1;i < num_rows;i++){
+    for(int j = 1;j < num_columns;j++){
+      for(int x = 0;x < numObjects.size();x++){
+        if(an_image->GetPixel(i,j) == numObjects[x]){
+          centerColumn[x] = centerColumn[x] + i;
+          numCol[x] += 1;
+          centerRow[x] = centerRow[x] + j;
+          numRow[x] += 1;
         }
       }
     }
+  }
 
-    for(int x = 0;x < numObjects.size();x++){
-      centerColumn[x] = centerColumn[x]/numCol[x];
-      centerRow[x] = centerRow[x]/numRow[x];
-    }   
+  for(int x = 0;x < numObjects.size();x++){
+    centerColumn[x] = centerColumn[x]/numCol[x];
+    centerRow[x] = centerRow[x]/numRow[x];
+  }   
 
-    for(int i = 0; i < numObjects.size();i++){
-      cout << "center of item: " << numObjects[i] << " is (" << centerColumn[i] << "," << centerRow[i]<<")" << endl ;
-      an_image->SetPixel(centerColumn[i],centerRow[i],255);
-    }
+  for(int i = 0; i < numObjects.size();i++){
+    cout << "center of item: " << numObjects[i] << " is (" << centerColumn[i] << "," << centerRow[i]<<")" << endl ;
+    an_image->SetPixel(centerColumn[i],centerRow[i],255);
+  }
 
 
-  
-  vector<int> a(numObjects.size()),b(numObjects.size()) ,c(numObjects.size()) ;
+  vector<int> a(numObjects.size()), b(numObjects.size()), c(numObjects.size()) ;
   for(int i = 1;i < num_rows;i++){
     for(int j = 1;j < num_columns;j++){
       for(int x = 0;x < numObjects.size();x++){
@@ -240,7 +239,7 @@ void p3(Image *an_image){
   
   vector<double> theta2(numObjects.size());
   for(int x = 0;x < numObjects.size();x++){
-    theta2[x] = theta1[x] + M_PI/2.0;
+    theta2[x] = theta2[x] + M_PI/2.0;
   }
 
   vector<double> e_max(numObjects.size());
@@ -253,10 +252,21 @@ void p3(Image *an_image){
     roundedness[x] = e_min[x]/e_max[x];
   }
 
-  for(int x = 0;x < numObjects.size();x++){
-    cout << e_min[x] << endl;
+  //equation of the line 
+  //xsin(0) - ycos(0) + p  = 0 
+  //use center x y to find p 
+  for(int i = 1;i < num_rows;i++){
+    for(int j = 1;j < num_columns;j++){
+      for(int x = 0;x < numObjects.size();x++){
+        if(an_image->GetPixel(i,j) == numObjects[x]){
+          if( ((i-centerColumn[x]) * sin(theta1[x]) - (j-centerRow[x]) * cos(theta1[x])) == 0){
+            an_image->SetPixel(i,j,255);
+          }
+        }
+      }
+    }
   }
-
+//orentation is pi/2 - theta 
 }
 
 bool ReadImage(const string &filename, Image *an_image) {  

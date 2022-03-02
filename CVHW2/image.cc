@@ -199,17 +199,59 @@ void p3(Image *an_image){
         }
       }
     }
+
     for(int x = 0;x < numObjects.size();x++){
       centerColumn[x] = centerColumn[x]/numCol[x];
       centerRow[x] = centerRow[x]/numRow[x];
     }   
 
-
     for(int i = 0; i < numObjects.size();i++){
       cout << "center of item: " << numObjects[i] << " is (" << centerColumn[i] << "," << centerRow[i]<<")" << endl ;
       an_image->SetPixel(centerColumn[i],centerRow[i],255);
     }
-    
+
+
+  
+  vector<int> a(numObjects.size()),b(numObjects.size()) ,c(numObjects.size()) ;
+  for(int i = 1;i < num_rows;i++){
+    for(int j = 1;j < num_columns;j++){
+      for(int x = 0;x < numObjects.size();x++){
+        if(an_image->GetPixel(i,j) == numObjects[x]){
+          a[x] = a[x] + pow((i-centerColumn[x]),2);
+          b[x] = b[x] + (i-centerColumn[x])*(i-centerRow[x]);
+          c[x] = c[x] + pow((i-centerRow[x]),2);
+        }
+      }
+    }
+  }
+  for(int i = 0;i < b.size();i++){
+    b[i] = 2*b[i];
+  }
+
+  vector<double> theta1(numObjects.size());
+  for(int x = 0;x < numObjects.size();x++){
+    theta1[x] = atan2(b[x],a[x]-c[x])/2.0;
+  }
+
+  vector<double> e_min(numObjects.size());
+  for(int x = 0;x < numObjects.size();x++){
+    e_min[x] = a[x] * sin(theta1[x]) * sin(theta1[x]) - b[x]*sin(theta1[x])*cos(theta1[x]) + c[x]*cos(theta1[x])*cos(theta1[x]);
+  }
+  
+  vector<double> theta2(numObjects.size());
+  for(int x = 0;x < numObjects.size();x++){
+    theta2[x] = theta1[x] + M_PI/2.0;
+  }
+
+  vector<double> e_max(numObjects.size());
+  for(int x = 0;x < numObjects.size();x++){
+    e_min[x] = a[x] * sin(theta2[x]) * sin(theta2[x]) - b[x]*sin(theta2[x])*cos(theta2[x]) + c[x]*cos(theta2[x])*cos(theta2[x]);
+  }
+
+  vector<double> roundedness(numObjects.size());
+  for(int x = 0;x < numObjects.size();x++){
+    roundedness[x] = e_min[x]/e_max[x];
+  }
 
 }
 

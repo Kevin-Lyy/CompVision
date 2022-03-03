@@ -285,7 +285,6 @@ int main(int argc, char **argv){
     }
 
     //P4
-
     vector<double> model_database = readDatabase(intputdatabse);
     compareToImage(&an_image,model_database);
     

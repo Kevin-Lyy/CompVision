@@ -212,7 +212,7 @@ void p3(Image *an_image, string database){
     
     vector<double> theta2(num_of_objects.size());
     for(int x = 0;x < num_of_objects.size();x++){
-      theta2[x] = theta2[x] + M_PI/2.0;
+      theta2[x] = theta1[x] + M_PI/2.0;
     }
 
     vector<double> e_max(num_of_objects.size());
@@ -262,8 +262,6 @@ void p3(Image *an_image, string database){
         databased << roundedness[i] << " ";
         databased << orientation[i] << " ";
         databased << "\n";
-
-
     }
     databased.close();
 }

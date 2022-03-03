@@ -196,11 +196,6 @@ void compareToImage(Image *an_image, vector<double> database){
     center_row = getCenterXorY(an_image, num_of_objects,0);
 
 
-    for(int i = 0; i < num_of_objects.size();i++){
-        an_image->SetPixel(center_row[i],center_column[i],255);
-    }
-
-
     vector<int> a(num_of_objects.size()), b(num_of_objects.size()), c(num_of_objects.size()) ;
     for(int i = 1;i < num_rows;i++){
       for(int j = 1;j < num_columns;j++){
@@ -229,7 +224,7 @@ void compareToImage(Image *an_image, vector<double> database){
     
     vector<double> theta2(num_of_objects.size());
     for(int x = 0;x < num_of_objects.size();x++){
-      theta2[x] = theta2[x] + M_PI/2.0;
+      theta2[x] = theta1[x] + M_PI/2.0;
     }
 
     vector<double> e_max(num_of_objects.size());
@@ -246,7 +241,7 @@ void compareToImage(Image *an_image, vector<double> database){
     for(int x = 0;x < num_of_objects.size();x++){
       theta_degrees[x] = 180.0 * theta1[x]/M_PI;
     }
-    //orentation is pi/2 - theta 
+
     vector<double> orientation(num_of_objects.size());
     for(int x = 0;x < num_of_objects.size();x++){
       orientation[x] = 90.0 - theta_degrees[x];
@@ -263,8 +258,21 @@ void compareToImage(Image *an_image, vector<double> database){
       newY[i] = (newX[i] * sin(theta1[i]) + rho[i])/cos(theta1[i]);
     }
 
+    for(int i = 0; i < num_of_objects.size();i++){
+        cout << i << " ";
+        cout << center_row[i] << " ";
+        cout << center_column[i] << " ";
+        cout << e_min[i] << " ";
+        cout << area_of_objects[i] << " ";
+        cout << roundedness[i] << " ";
+        cout << orientation[i] << " ";
+        cout << "\n";
+    }
+
     for(int i = 0;i < num_of_objects.size();i++){
       //DrawLine(center_row[i],center_column[i],newX[i],newY[i],255,an_image);
+      //compare roundedness and emin 
+
     }
 
 }

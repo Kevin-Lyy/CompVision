@@ -94,10 +94,8 @@ void conRegions(Image *an_image) {
     
 }
 
-void p3(Image *an_image){
-  conRegions(an_image);
+vector<int> objectCount(Image *an_image){
   vector<int> num_of_objects;
-
   const int num_rows = an_image->num_rows();
   const int num_columns = an_image->num_columns();
   bool is_in=false;
@@ -117,53 +115,92 @@ void p3(Image *an_image){
         }
       }
   }
+  return num_of_objects;
+}
 
-  vector<int> area_of_objects(num_of_objects.size());
-    for(int i = 1;i < num_rows;i++){
-        for(int j = 1;j < num_columns;j++){
-          for(int x = 0;x < num_of_objects.size();x++){
-            if(an_image->GetPixel(i,j) == num_of_objects[x]){
-              area_of_objects[x] = area_of_objects[x]+1;
+vector<int> getAreaOfObjects(Image *an_image, vector<int> num_of_obj){
+  const int num_rows = an_image->num_rows();
+  const int num_columns = an_image->num_columns();
+  vector<int> area_of_objects(num_of_obj.size());
+  for(int i = 1;i < num_rows;i++){
+    for(int j = 1;j < num_columns;j++){
+        for(int x = 0;x < num_of_obj.size();x++){
+            if(an_image->GetPixel(i,j) == num_of_obj[x]){
+                area_of_objects[x] = area_of_objects[x]+1;
             }
-          }
         }
+    }
   }
+  return area_of_objects;
+}
 
-  vector<int> center_column(num_of_objects.size()),center_row(num_of_objects.size()),num_of_columns(num_of_objects.size()),num_of_rows((num_of_objects.size()));
+vector<int> getCenterColumn(Image *an_image, vector<int> num_of_obj){
+    vector<int> num_of_columns(num_of_obj.size()), center_column(num_of_obj.size());
+    const int num_rows = an_image->num_rows();
+    const int num_columns = an_image->num_columns();
     for(int i = 1;i < num_rows;i++){
       for(int j = 1;j < num_columns;j++){
-        for(int x = 0;x < num_of_objects.size();x++){
-          if(an_image->GetPixel(i,j) == num_of_objects[x]){
+        for(int x = 0;x < num_of_obj.size();x++){
+          if(an_image->GetPixel(i,j) == num_of_obj[x]){
             center_column[x] = center_column[x] + j;
             num_of_columns[x] += 1;
+
+          }
+        }
+      }
+    }
+    for(int x = 0;x < num_of_obj.size();x++){
+      center_column[x] = center_column[x]/num_of_columns[x];
+    }   
+    return num_of_columns;
+}
+
+vector<int> getCenterRow(Image *an_image, vector<int> num_of_obj){
+    vector<int> num_of_rows((num_of_obj.size())), center_row(num_of_obj.size());
+    const int num_rows = an_image->num_rows();
+    const int num_columns = an_image->num_columns();
+    for(int i = 1;i < num_rows;i++){
+      for(int j = 1;j < num_columns;j++){
+        for(int x = 0;x < num_of_obj.size();x++){
+          if(an_image->GetPixel(i,j) == num_of_obj[x]){
             center_row[x] = center_row[x] + i;
             num_of_rows[x] += 1;
           }
         }
       }
     }
-
-    for(int x = 0;x < num_of_objects.size();x++){
-      center_column[x] = center_column[x]/num_of_columns[x];
+    for(int x = 0;x < num_of_obj.size();x++){
       center_row[x] = center_row[x]/num_of_rows[x];
     }   
+    return num_of_rows;
+}
 
-    for(int i = 0; i < num_of_objects.size();i++){
-      an_image->SetPixel(center_row[i],center_column[i],255);
-    }
+void p3(Image *an_image){
+    conRegions(an_image);
+    const int num_rows = an_image->num_rows();
+    const int num_columns = an_image->num_columns();
+
+    vector<int> num_of_objects = objectCount(an_image);
+
+    vector<int> area_of_objects(num_of_objects.size());
+    area_of_objects = getAreaOfObjects(an_image, num_of_objects);
+
+    vector<int> center_column(num_of_objects.size()),center_row(num_of_objects.size());
+    center_column = getCenterColumn(an_image,num_of_objects);
+    center_row = getCenterRow(an_image,num_of_objects);
 
 
     vector<int> a(num_of_objects.size()), b(num_of_objects.size()), c(num_of_objects.size()) ;
     for(int i = 1;i < num_rows;i++){
-      for(int j = 1;j < num_columns;j++){
-        for(int x = 0;x < num_of_objects.size();x++){
-          if(an_image->GetPixel(i,j) == num_of_objects[x]){
-            a[x] = a[x] + pow((i-center_row[x]),2);
-            b[x] = b[x] + (i-center_row[x])*(j-center_column[x]);
-            c[x] = c[x] + pow((j-center_column[x]),2);
-          }
+        for(int j = 1;j < num_columns;j++){
+            for(int x = 0;x < num_of_objects.size();x++){
+                if(an_image->GetPixel(i,j) == num_of_objects[x]){
+                a[x] = a[x] + pow((i-center_row[x]),2);
+                b[x] = b[x] + (i-center_row[x])*(j-center_column[x]);
+                c[x] = c[x] + pow((j-center_column[x]),2);
+                }
+            }
         }
-      }
     }
     for(int i = 0;i < b.size();i++){
       b[i] = 2*b[i];
@@ -198,44 +235,27 @@ void p3(Image *an_image){
     for(int x = 0;x < num_of_objects.size();x++){
       theta_degrees[x] = 180.0 * theta1[x]/M_PI;
     }
-    //orentation is pi/2 - theta 
+
     vector<double> orientation(num_of_objects.size());
     for(int x = 0;x < num_of_objects.size();x++){
       orientation[x] = 90.0 - theta_degrees[x];
     }
-
-    // for(int i = 0; i < num_of_objects.size();i++){
-    //   cout << num_of_objects[i] << " ";
-    //   cout << center_row[i] << " ";
-    //   cout << center_column[i] << " ";
-    //   cout << e_min[i] << " ";
-    //   cout << area_of_objects[i] << " ";
-    //   cout << roundedness[i] << " ";
-    //   cout << orientation[i] << " ";
-    //   cout << endl;
-    // }
     
     vector<double> rho(num_of_objects.size());
     for(int i = 0;i < num_of_objects.size();i++){
       rho[i] = center_column[i]*cos(theta1[i]) - center_row[i]*sin(theta1[i]);
-      cout << rho[i] << endl;
     }
 
     vector<int> new_x(num_of_objects.size()), new_y(num_of_objects.size());
     for(int i = 0;i < num_of_objects.size();i++){
       new_x[i] = center_row[i] + 30;
       new_y[i] = (new_x[i] * sin(theta1[i]) + rho[i])/cos(theta1[i]);
-     
-
     }
 
     for(int i = 0;i < num_of_objects.size();i++){
       DrawLine(center_row[i],center_column[i],new_x[i],new_y[i],255,an_image);
     }
 
-    for(int i = 0;i < num_of_objects.size();i++){
-      cout << theta1[i] << endl;
-    }
   
 }
 

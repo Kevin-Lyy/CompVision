@@ -23,69 +23,70 @@ void conRegions(Image *an_image) {
       }
     }
   }
-  vector<int> equivList,changedList;
-  equivList.push_back(50);
-  changedList.push_back(50);
-  int top,left,place=0;
+
+  vector<int> equiv_list,changed_list;
+  equiv_list.push_back(50);
+  changed_list.push_back(50);
+  int pixel_above,pixel_left,new_pixel=0;
     for(int i = 1;i < num_rows;i++){
       for(int j = 1;j < num_columns;j++){
         if(an_image->GetPixel(i,j) == 49){
-          top = an_image->GetPixel(i-1,j);
-          left = an_image->GetPixel(i,j-1);
+          pixel_above = an_image->GetPixel(i-1,j);
+          pixel_left = an_image->GetPixel(i,j-1);
 
           //CHECK TO THE LEFT AND RIGHT IF THEY ARE BACKGROUND 
-          if(top == 0 && left == 0){
-            an_image->SetPixel(i,j,equivList[place]);
-            equivList.push_back(equivList[place]+1);
-            place++;
+          if(pixel_above == 0 && pixel_left == 0){
+            an_image->SetPixel(i,j,equiv_list[new_pixel]);
+            equiv_list.push_back(equiv_list[new_pixel]+1);
+            new_pixel++;
           }
           //IF LEFT AND TOP ARE DIFF VALUES
-          else if(top != left){
+          else if(pixel_above != pixel_left){
             //TOP IS BACKGROUND
-            if(top == 0 && left != 0){
-              an_image->SetPixel(i,j,left);
+            if(pixel_above == 0 && pixel_left != 0){
+              an_image->SetPixel(i,j,pixel_left);
             }
             // LEFT IS BACKGROUND
-            else if(left == 0 && top !=0 ){
-              an_image->SetPixel(i,j,top);
+            else if(pixel_left == 0 && pixel_above !=0 ){
+              an_image->SetPixel(i,j,pixel_above);
             }
             else{
-              if(left < top){
-                an_image->SetPixel(i,j,left);
-                for(int x = 0; x <equivList.size();x++ ){
-                  if(top == equivList[x]){
-                    equivList[x] = left;
+              if(pixel_left < pixel_above){
+                an_image->SetPixel(i,j,pixel_left);
+                for(int x = 0; x <equiv_list.size();x++ ){
+                  if(pixel_above == equiv_list[x]){
+                    equiv_list[x] = pixel_left;
                   }
                 }
               }
-              else if (left > top){
-                an_image->SetPixel(i,j,top);
-                for(int x = 0; x <equivList.size();x++ ){
-                  if(left == equivList[x]){
-                    equivList[x] = top;
+              else if (pixel_left > pixel_above){
+                an_image->SetPixel(i,j,pixel_above);
+                for(int x = 0; x <equiv_list.size();x++ ){
+                  if(pixel_left == equiv_list[x]){
+                    equiv_list[x] = pixel_above;
                   }
                 }
               }
             }
           }
           //TOP AND LEFT ARE THE SAME AND ARE NOT BACKROUND BUT DIFF FOREGROUND
-          else if(top == left && top != 0){
-            an_image->SetPixel(i,j,top);
+          else if(pixel_above == pixel_left && pixel_above != 0){
+            an_image->SetPixel(i,j,pixel_above);
           }
         }
       }
     }  
 
-    for(int i = 0; i < equivList.size();i++){
-      equivList[i] = equivList[equivList[i]-50]; 
+    for(int i = 0; i < equiv_list.size();i++){
+      equiv_list[i] = equiv_list[equiv_list[i]-50]; 
     }
 
     //SECOND PASS
     for(int i = 1;i < num_rows;i++){
         for(int j = 1;j < num_columns;j++){
-          for(int x = 0;x < equivList.size();x++){
+          for(int x = 0;x < equiv_list.size();x++){
             if(an_image->GetPixel(i,j) ==x+50 ){
-              an_image->SetPixel(i,j,equivList[x]);
+              an_image->SetPixel(i,j,equiv_list[x]);
             }
           }
         }

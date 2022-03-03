@@ -95,42 +95,58 @@ void conRegions(Image *an_image) {
     
 }
 
-
-void p3(Image *an_image, string database){
-  conRegions(an_image);
+vector<int> objectCount(Image *an_image){
   vector<int> num_of_objects;
-
   const int num_rows = an_image->num_rows();
   const int num_columns = an_image->num_columns();
-  bool isin=false;
+  bool is_in=false;
 
   for(int i = 1;i < num_rows;i++){
       for(int j = 1;j < num_columns;j++){
-
         if(an_image->GetPixel(i,j) != 0){
           for(int x = 0;x < num_of_objects.size();x++){
             if( an_image->GetPixel(i,j) == num_of_objects[x]){
-              isin = true;
+              is_in = true;
             }
           }
-          if(!isin){
+          if(!is_in){
             num_of_objects.push_back(an_image->GetPixel(i,j));
           }
-          isin = false;
+          is_in = false;
         }
       }
   }
+  return num_of_objects;
+}
 
-  vector<int> area_of_objects(num_of_objects.size());
-    for(int i = 1;i < num_rows;i++){
-        for(int j = 1;j < num_columns;j++){
-          for(int x = 0;x < num_of_objects.size();x++){
-            if(an_image->GetPixel(i,j) == num_of_objects[x]){
-              area_of_objects[x] = area_of_objects[x]+1;
+vector<int> getAreaOfObjects(Image *an_image, vector<int> num_of_obj){
+  const int num_rows = an_image->num_rows();
+  const int num_columns = an_image->num_columns();
+  vector<int> area_of_objects(num_of_obj.size());
+  for(int i = 1;i < num_rows;i++){
+    for(int j = 1;j < num_columns;j++){
+        for(int x = 0;x < num_of_obj.size();x++){
+            if(an_image->GetPixel(i,j) == num_of_obj[x]){
+                area_of_objects[x] = area_of_objects[x]+1;
             }
-          }
         }
+    }
   }
+  return area_of_objects;
+}
+
+
+void p3(Image *an_image, string database){
+  conRegions(an_image);
+
+  const int num_rows = an_image->num_rows();
+  const int num_columns = an_image->num_columns();
+
+  vector<int> num_of_objects;
+  num_of_objects = objectCount(an_image);
+
+  vector<int> area_of_objects = getAreaOfObjects(an_image, num_of_objects);
+
 
   vector<int> center_column(num_of_objects.size()),center_row(num_of_objects.size()),nmm_of_col(num_of_objects.size()),nmm_of_row((num_of_objects.size()));
     for(int i = 1;i < num_rows;i++){

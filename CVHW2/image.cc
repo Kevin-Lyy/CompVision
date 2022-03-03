@@ -47,7 +47,7 @@ void Image::DeallocateSpace() {
   num_rows_ = 0;
   num_columns_ = 0;
 }
-
+/*
 void grayToBin(int threshold, Image *an_image) {
   if (an_image == nullptr) abort();
   const int num_rows = an_image->num_rows();
@@ -302,6 +302,7 @@ void p3(Image *an_image){
     }
   
 }
+*/
 
 bool ReadImage(const string &filename, Image *an_image) {  
   if (an_image == nullptr) abort();

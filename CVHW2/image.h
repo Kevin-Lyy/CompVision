@@ -63,11 +63,11 @@ class Image {
   int **pixels_;
 };
 
-void grayToBin(int threshold, Image *an_image);
+// void grayToBin(int threshold, Image *an_image);
 
-void conRegions(Image *an_image);
+// void conRegions(Image *an_image);
 
-void p3(Image *an_image);
+// void p3(Image *an_image);
 
 // Reads a pgm image from file input_filename.
 // an_image is the resulting image.

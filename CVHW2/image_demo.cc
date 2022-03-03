@@ -37,7 +37,7 @@ main(int argc, char **argv){
   //conRegions(&an_image);
 
   //P3
-  p3(&an_image);
+  //p3(&an_image);
 
 
   if (!WriteImage(output_file, an_image)){

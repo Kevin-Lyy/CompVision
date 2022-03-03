@@ -135,40 +135,52 @@ vector<int> getAreaOfObjects(Image *an_image, vector<int> num_of_obj){
   return area_of_objects;
 }
 
-
-void p3(Image *an_image, string database){
-  conRegions(an_image);
-
-  const int num_rows = an_image->num_rows();
-  const int num_columns = an_image->num_columns();
-
-  vector<int> num_of_objects;
-  num_of_objects = objectCount(an_image);
-
-  vector<int> area_of_objects = getAreaOfObjects(an_image, num_of_objects);
-
-
-  vector<int> center_column(num_of_objects.size()),center_row(num_of_objects.size()),nmm_of_col(num_of_objects.size()),nmm_of_row((num_of_objects.size()));
+vector<int> getCenterXorY(Image *an_image, vector<int> num_of_obj,bool x_or_y){
+    vector<int> num_of_pixels(num_of_obj.size()), center_pixels(num_of_obj.size());
+    const int num_rows = an_image->num_rows();
+    const int num_columns = an_image->num_columns();
     for(int i = 1;i < num_rows;i++){
       for(int j = 1;j < num_columns;j++){
-        for(int x = 0;x < num_of_objects.size();x++){
-          if(an_image->GetPixel(i,j) == num_of_objects[x]){
-            center_column[x] = center_column[x] + j;
-            nmm_of_col[x] += 1;
-            center_row[x] = center_row[x] + i;
-            nmm_of_row[x] += 1;
+        for(int x = 0;x < num_of_obj.size();x++){
+          if(an_image->GetPixel(i,j) == num_of_obj[x]){
+            if(x_or_y){
+                center_pixels[x] = center_pixels[x] + j;
+            }
+            else{
+                center_pixels[x] = center_pixels[x] + i;
+            }
+            num_of_pixels[x] += 1;
           }
         }
       }
     }
-
-    for(int x = 0;x < num_of_objects.size();x++){
-      center_column[x] = center_column[x]/nmm_of_col[x];
-      center_row[x] = center_row[x]/nmm_of_row[x];
+    for(int x = 0;x < num_of_obj.size();x++){
+      center_pixels[x] = center_pixels[x]/num_of_pixels[x];
     }   
+    return center_pixels;
+}
+
+
+
+void p3(Image *an_image, string database){
+    conRegions(an_image);
+
+    const int num_rows = an_image->num_rows();
+    const int num_columns = an_image->num_columns();
+
+    vector<int> num_of_objects;
+    num_of_objects = objectCount(an_image);
+
+    vector<int> area_of_objects = getAreaOfObjects(an_image, num_of_objects);
+
+
+    vector<int> center_column(num_of_objects.size()),center_row(num_of_objects.size());
+    center_column = getCenterXorY(an_image, num_of_objects,1);
+    center_row = getCenterXorY(an_image, num_of_objects,0);
+
 
     for(int i = 0; i < num_of_objects.size();i++){
-      an_image->SetPixel(center_row[i],center_column[i],255);
+        an_image->SetPixel(center_row[i],center_column[i],255);
     }
 
 
@@ -222,18 +234,6 @@ void p3(Image *an_image, string database){
     for(int x = 0;x < num_of_objects.size();x++){
       orientation[x] = 90.0 - theta_degrees[x];
     }
-
-    // for(int i = 0; i < num_of_objects.size();i++){
-    //   cout << num_of_objects[i] << " ";
-    //   cout << center_row[i] << " ";
-    //   cout << center_column[i] << " ";
-    //   cout << e_min[i] << " ";
-    //   cout << area_of_objects[i] << " ";
-    //   cout << roundedness[i] << " ";
-    //   cout << orientation[i] << " ";
-    //   cout << endl;
-    // }
-
     
     vector<double> rho(num_of_objects.size());
     for(int i = 0;i < num_of_objects.size();i++){
@@ -244,12 +244,12 @@ void p3(Image *an_image, string database){
     for(int i = 0;i < num_of_objects.size();i++){
       newX[i] = center_row[i] + 30;
       newY[i] = (newX[i] * sin(theta1[i]) + rho[i])/cos(theta1[i]);
-     
     }
 
     for(int i = 0;i < num_of_objects.size();i++){
       DrawLine(center_row[i],center_column[i],newX[i],newY[i],255,an_image);
     }
+
     ofstream databased;
     databased.open(database);
 

@@ -1,4 +1,6 @@
-//KEVIN LY
+// KEVIN LY
+// P1 
+// This file converts a gray level image to a binary one using a given threshold value 
 #include "image.h"
 #include <cstdio>
 #include <iostream>
@@ -7,6 +9,8 @@
 using namespace std;
 using namespace ComputerVisionProjects;
 
+// This function goes through the image pixel by pixel and if the pixel is less than the threshold
+// set the color black otherwise set it white 
 void grayToBin(int threshold, Image *an_image) {
   if (an_image == nullptr) abort();
   const int num_rows = an_image->num_rows();
@@ -41,7 +45,6 @@ int main(int argc, char **argv){
 
     //P1
     grayToBin(threshold_,&an_image);
-
 
     if (!WriteImage(output_file, an_image)){
         cout << "Can't write to file " << output_file << endl;

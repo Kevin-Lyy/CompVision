@@ -56,8 +56,7 @@ run:
 	./p1 many_objects_2.pgm objects_output_1.pgm
 	./p2 many_objects_2.pgm objects_output_2.pgm
 	./p3 many_objects_2.pgm database.txt objects_output_3.pgm 
-	./p3 many_objects_1.pgm database2.txt objects_output_3_2.pgm
 	./p4 many_objects_1.pgm database.txt objects_output_4.pgm
 # Clean files
 clean:
-	(rm -f *.o; rm -f $(PROGRAM_1); rm -f $(PROGRAM_2); rm -f $(PROGRAM_3); rm -f $(PROGRAM_4); objects_output_3.pgm)
+	(rm -f *.o; rm -f $(PROGRAM_1); rm -f $(PROGRAM_2); rm -f $(PROGRAM_3); rm -f $(PROGRAM_4);)

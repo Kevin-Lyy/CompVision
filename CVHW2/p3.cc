@@ -247,8 +247,11 @@ void p3(Image *an_image, string database){
     }
 
     for(int i = 0;i < num_of_objects.size();i++){
-      DrawLine(center_row[i],center_column[i],newX[i],newY[i],255,an_image);
+      //DrawLine(center_row[i],center_column[i],newX[i],newY[i],255,an_image);
     }
+
+    DrawLine(center_row[5],center_column[5],newX[5],newY[5],255,an_image);
+    DrawLine(center_row[4],center_column[4],newX[4],newY[4],255,an_image);
 
     ofstream databased;
     databased.open(database);

@@ -179,7 +179,7 @@ vector<int> objectCount(Image *an_image){
   return num_of_objects;
 }
 
-void compareToImage(Image *an_image, vector<double> database){
+void compareToImage(Image *an_image, vector<double> object_model_database){
     conRegions(an_image);
 
     const int num_rows = an_image->num_rows();
@@ -258,22 +258,19 @@ void compareToImage(Image *an_image, vector<double> database){
       newY[i] = (newX[i] * sin(theta1[i]) + rho[i])/cos(theta1[i]);
     }
 
-    for(int i = 0; i < num_of_objects.size();i++){
-        cout << i << " ";
-        cout << center_row[i] << " ";
-        cout << center_column[i] << " ";
-        cout << e_min[i] << " ";
-        cout << area_of_objects[i] << " ";
-        cout << roundedness[i] << " ";
-        cout << orientation[i] << " ";
-        cout << "\n";
-    }
 
     for(int i = 0;i < num_of_objects.size();i++){
-      //DrawLine(center_row[i],center_column[i],newX[i],newY[i],255,an_image);
       //compare roundedness and emin 
+      for(int x = 5,y = 3;x < object_model_database.size(); x+=7,y +=7){
+        if(roundedness[i] == object_model_database[x] && e_min[i] ==object_model_database[y] ){
+          //DrawLine(center_row[i],center_column[i],newX[i],newY[i],255,an_image);
+        }
+      }
 
     }
+
+    // DrawLine(center_row[0],center_column[0],newX[0],newY[0],255,an_image);
+    // DrawLine(center_row[4],center_column[4],newX[4],newY[4],255,an_image);
 
 }
 

@@ -25,19 +25,11 @@ main(int argc, char **argv){
     return 0;
   }
 
-  // Draw a line from (0, 0) to (100, 240) having gray-value
-  // 200.
-  // DrawLine(0, 0, 240, 260, 200,
-	//    &an_image); 
-  //P1
-  //grayToBin(110,&an_image);
+  Draw a line from (0, 0) to (100, 240) having gray-value
+  200.
+  DrawLine(0, 0, 240, 260, 200,
+	   &an_image); 
 
-
-  //P2
-  //conRegions(&an_image);
-
-  //P3
-  //p3(&an_image);
 
 
   if (!WriteImage(output_file, an_image)){

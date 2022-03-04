@@ -1,4 +1,5 @@
-//KEVIN LY
+// KEVIN LY
+// P3
 #include "image.h"
 #include <cstdio>
 #include <iostream>

@@ -10,11 +10,13 @@ i. Which parts of your assignment were completed
     
     p2:
         p2.cc  
-            void conRegions(Image *an_image)
+            vector<int> objectCount(Image *an_image)
+            
+            void connectedRegions(Image *an_image)
     
     p3:
         p3.cc   
-            void conRegions(Image *an_image)
+            void connectedRegions(Image *an_image)
 
             vector<int> objectCount(Image *an_image)
 
@@ -28,7 +30,7 @@ i. Which parts of your assignment were completed
         p4.cc
             vector<double> readDatabase(string database)
 
-            void conRegions(Image *an_image)
+            void connectedRegions(Image *an_image)
 
             vector<int> objectCount(Image *an_image)
 

@@ -25,12 +25,13 @@ void grayToBin(int threshold, Image *an_image) {
 }
 
 int main(int argc, char **argv){
-    if (argc!=3) {
+    if (argc!=4) {
         printf("Usage: %s file1 file2\n", argv[0]);
         return 0;
     }
     const string input_file(argv[1]);
-    const string output_file(argv[2]);
+    const int threshold_(stoi(argv[2]));
+    const string output_file(argv[3]);
 
     Image an_image;
     if (!ReadImage(input_file, &an_image)) {
@@ -39,7 +40,7 @@ int main(int argc, char **argv){
     }
 
     //P1
-    grayToBin(110,&an_image);
+    grayToBin(threshold_,&an_image);
 
 
     if (!WriteImage(output_file, an_image)){

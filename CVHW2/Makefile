@@ -53,7 +53,7 @@ all:
 	make $(PROGRAM_4)
 
 run:
-	./p1 many_objects_2.pgm objects_output_1.pgm
+	./p1 many_objects_2.pgm 120 objects_output_1.pgm
 	./p2 many_objects_2.pgm objects_output_2.pgm
 	./p3 many_objects_2.pgm database.txt objects_output_3.pgm 
 	./p4 many_objects_1.pgm database.txt objects_output_4.pgm

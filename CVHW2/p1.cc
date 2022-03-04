@@ -1,7 +1,7 @@
 // KEVIN LY
 // P1 
 // This file converts a gray level image to a binary one using a given threshold value 
-// it has two arguments: the input image and it returns a binary image 
+// it has three arguments: the input image, the threshold and it returns a binary image 
 #include "image.h"
 #include <cstdio>
 #include <iostream>
@@ -12,7 +12,7 @@ using namespace ComputerVisionProjects;
 
 // This function goes through the image pixel by pixel and if the pixel is less than the threshold
 // set the color black otherwise set it white 
-// input: threshold, an_image
+// parameters: threshold, the image 
 void grayToBin(int threshold, Image *an_image) {
   if (an_image == nullptr) abort();
   const int num_rows = an_image->num_rows();

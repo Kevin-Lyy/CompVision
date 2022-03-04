@@ -261,10 +261,10 @@ void compareToImage(Image *an_image, vector<double> object_model_database){
 
 
     for(int i = 0;i < num_of_objects.size();i++){
-      //compare roundedness and emin 
+      //compare roundedness and area
       for(int x = 5,y = 3;x < object_model_database.size(); x+=7,y +=7){
-        if(roundedness[i] == object_model_database[x] && e_min[i] ==object_model_database[y] ){
-          //DrawLine(center_row[i],center_column[i],newX[i],newY[i],255,an_image);
+        if(roundedness[i] <= object_model_database[x] + 0.01 &&roundedness[i] >= object_model_database[x] - 0.01 ){
+          DrawLine(center_row[i],center_column[i],newX[i],newY[i],255,an_image);
         }
       }
 

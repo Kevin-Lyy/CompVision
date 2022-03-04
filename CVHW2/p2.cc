@@ -1,3 +1,4 @@
+//KEVIN LY
 #include "image.h"
 #include <cstdio>
 #include <iostream>

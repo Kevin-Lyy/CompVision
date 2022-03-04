@@ -1,3 +1,4 @@
+//KEVIN LY
 #include "image.h"
 #include <cstdio>
 #include <iostream>
@@ -162,7 +163,7 @@ vector<int> getCenterXorY(Image *an_image, vector<int> num_of_obj,bool x_or_y){
 
 
 
-void p3(Image *an_image, string database){
+void generateDatabase(Image *an_image, string database){
     conRegions(an_image);
 
     const int num_rows = an_image->num_rows();
@@ -247,11 +248,8 @@ void p3(Image *an_image, string database){
     }
 
     for(int i = 0;i < num_of_objects.size();i++){
-      //DrawLine(center_row[i],center_column[i],newX[i],newY[i],255,an_image);
+      DrawLine(center_row[i],center_column[i],newX[i],newY[i],255,an_image);
     }
-
-    DrawLine(center_row[5],center_column[5],newX[5],newY[5],255,an_image);
-    DrawLine(center_row[4],center_column[4],newX[4],newY[4],255,an_image);
 
     ofstream databased;
     databased.open(database);
@@ -286,7 +284,7 @@ int main(int argc, char **argv){
 
     //P3
     
-    p3(&an_image, outdatabase);
+    generateDatabase(&an_image, outdatabase);
     
 
 

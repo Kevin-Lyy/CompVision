@@ -1,6 +1,7 @@
 // KEVIN LY
 // P1 
 // This file converts a gray level image to a binary one using a given threshold value 
+// it has two arguments: the input image and it returns a binary image 
 #include "image.h"
 #include <cstdio>
 #include <iostream>

@@ -55,8 +55,8 @@ iv. The input file (if any) and the output files (if any).
         many_objects_2.pgm
         many_objects_1.pgm
     output:
-    objects_output_1.pgm
-    objects_output_2.pgm
-    objects_output_3.pgm
-    objects_output_4.pgm
-    database.txt
+        objects_output_1.pgm
+        objects_output_2.pgm
+        objects_output_3.pgm
+        objects_output_4.pgm
+        database.txt

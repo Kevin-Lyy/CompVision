@@ -120,8 +120,8 @@ void compareToImage(Image *an_image, vector<double> object_model_database){
 
 int main(int argc, char **argv){
   if (argc!=4) {
-      printf("Usage: %s file1 file2\n", argv[0]);
-      return 0;
+    printf("Usage: %s file1 file2\n", argv[0]);
+    return 0;
   }
   const string input_file(argv[1]);
   const string intputdatabse(argv[2]);
@@ -129,8 +129,8 @@ int main(int argc, char **argv){
 
   Image an_image;
   if (!ReadImage(input_file, &an_image)) {
-      cout <<"Can't open file " << input_file << endl;
-      return 0;
+    cout <<"Can't open file " << input_file << endl;
+    return 0;
   }
 
   //P4
@@ -138,8 +138,8 @@ int main(int argc, char **argv){
   compareToImage(&an_image,model_database);
   
   if (!WriteImage(output_file, an_image)){
-      cout << "Can't write to file " << output_file << endl;
-      return 0;
+    cout << "Can't write to file " << output_file << endl;
+    return 0;
   }
 
 }

@@ -104,22 +104,22 @@ void generateDatabase(Image *an_image, string database){
   ofstream databased;
   databased.open(database);
   for(int i = 0; i < num_of_objects.size();i++){
-      databased << num_of_objects[i] << " ";
-      databased << center_row[i] << " ";
-      databased << center_column[i] << " ";
-      databased << e_min[i] << " ";
-      databased << area_of_objects[i] << " ";
-      databased << roundedness[i] << " ";
-      databased << theta_degrees[i] << " ";
-      databased << "\n";
+    databased << num_of_objects[i] << " ";
+    databased << center_row[i] << " ";
+    databased << center_column[i] << " ";
+    databased << e_min[i] << " ";
+    databased << area_of_objects[i] << " ";
+    databased << roundedness[i] << " ";
+    databased << theta_degrees[i] << " ";
+    databased << "\n";
   }
   databased.close();
 }
 
 int main(int argc, char **argv){
   if (argc!=4) {
-      printf("Usage: %s file1 file2\n", argv[0]);
-      return 0;
+    printf("Usage: %s file1 file2\n", argv[0]);
+    return 0;
   }
   const string input_file(argv[1]);
   const string outdatabase(argv[2]);
@@ -127,16 +127,16 @@ int main(int argc, char **argv){
 
   Image an_image;
   if (!ReadImage(input_file, &an_image)) {
-      cout <<"Can't open file " << input_file << endl;
-      return 0;
+    cout <<"Can't open file " << input_file << endl;
+    return 0;
   }
 
   //P3
   generateDatabase(&an_image, outdatabase);
   
   if (!WriteImage(output_file, an_image)){
-      cout << "Can't write to file " << output_file << endl;
-      return 0;
+    cout << "Can't write to file " << output_file << endl;
+    return 0;
   }
 
 }

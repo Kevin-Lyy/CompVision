@@ -126,8 +126,6 @@ int main(int argc, char **argv){
     //P2
     connectedRegions(&an_image);
 
-
-
     if (!WriteImage(output_file, an_image)){
         cout << "Can't write to file " << output_file << endl;
         return 0;

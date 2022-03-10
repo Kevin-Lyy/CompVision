@@ -20,11 +20,24 @@ void locateEdges(Image *an_image){
   for(int i = 1;i < num_rows-1;i++){
     for(int j = 1;j < num_columns-1;j++){
       double derivative_of_x, derivative_of_y,epsilon,delta_sqr,mask;
+      /*
       epsilon = 4;
       mask = 1/(6.0*pow(epsilon,2));
       delta_sqr = mask*(an_image->GetPixel(i-1,j-1)+ 4*an_image->GetPixel(i,j-1) + an_image->GetPixel(i-1,j-1) + 4*an_image->GetPixel(i-1,j) + -20*an_image->GetPixel(i,j)
       + 4*an_image->GetPixel(i+1,j) + an_image->GetPixel(i-1,j+1) + 4*an_image->GetPixel(i,j+1) + an_image->GetPixel(i+1,j+1));
       edge_array[i][j] = delta_sqr;
+      */
+      derivative_of_x = (-1* an_image->GetPixel(i-1,j-1)+ 0*an_image->GetPixel(i,j-1) + an_image->GetPixel(i-1,j-1) + -2*an_image->GetPixel(i-1,j) + 0*an_image->GetPixel(i,j)
+      + 2*an_image->GetPixel(i+1,j) + -1*an_image->GetPixel(i-1,j+1) + 0*an_image->GetPixel(i,j+1) + an_image->GetPixel(i+1,j+1));
+      
+      derivative_of_y = (-1* an_image->GetPixel(i-1,j-1)+ -2*an_image->GetPixel(i,j-1) + -1*an_image->GetPixel(i-1,j-1) + 0*an_image->GetPixel(i-1,j) + 0*an_image->GetPixel(i,j)
+      + 0*an_image->GetPixel(i+1,j) + 1*an_image->GetPixel(i-1,j+1) + 2*an_image->GetPixel(i,j+1) + 1*an_image->GetPixel(i+1,j+1));
+
+      derivative_of_x = pow(derivative_of_x,2);
+      derivative_of_y = pow(derivative_of_y,2);
+      delta_sqr = sqrt(derivative_of_x+derivative_of_y)/2;
+      edge_array[i][j] = delta_sqr;
+
       
     }
   }

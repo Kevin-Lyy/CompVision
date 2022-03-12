@@ -27,17 +27,17 @@ PROGRAM_1 = h1
 $(PROGRAM_1): $(ALL_OBJ1)
 	g++ $(C++FLAG) -o $(EXEC_DIR)/$@ $(ALL_OBJ1) $(INCLUDES) $(LIBS_ALL)
 
-# # P2
-# ALL_OBJ2 = image.o p2.o
-# PROGRAM_2 = p2
-# $(PROGRAM_2): $(ALL_OBJ2)
-# 	g++ $(C++FLAG) -o $(EXEC_DIR)/$@ $(ALL_OBJ2) $(INCLUDES) $(LIBS_ALL)
+# P2
+ALL_OBJ2 = image.o h2.o
+PROGRAM_2 = h2
+$(PROGRAM_2): $(ALL_OBJ2)
+	g++ $(C++FLAG) -o $(EXEC_DIR)/$@ $(ALL_OBJ2) $(INCLUDES) $(LIBS_ALL)
 
-# # P3
-# ALL_OBJ3 = image.o p3.o functions.cc
-# PROGRAM_3 = p3
-# $(PROGRAM_3): $(ALL_OBJ3)
-# 	g++ $(C++FLAG) -o $(EXEC_DIR)/$@ $(ALL_OBJ3) $(INCLUDES) $(LIBS_ALL)
+# P3
+ALL_OBJ3 = image.o h3.o
+PROGRAM_3 = h3
+$(PROGRAM_3): $(ALL_OBJ3)
+	g++ $(C++FLAG) -o $(EXEC_DIR)/$@ $(ALL_OBJ3) $(INCLUDES) $(LIBS_ALL)
 
 # # P4
 # ALL_OBJ4 = image.o p4.o functions.cc
@@ -48,10 +48,14 @@ $(PROGRAM_1): $(ALL_OBJ1)
 # Compiling all
 all:
 	make $(PROGRAM_1)
+	make $(PROGRAM_2)
+	make $(PROGRAM_3)
 
 
 run:
-	./h1 hough_simple_1.pgm output.pgm
+	./h1 hough_simple_1.pgm output_h1.pgm
+	./h2 output_h1.pgm 45 output_h2.pgm	
+	./h3 output_h2.pgm output_h3.pgm
 
 # Clean files
 clean:

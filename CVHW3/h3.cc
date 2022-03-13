@@ -52,66 +52,48 @@ void hough_transformation(Image *an_image, Image *hough_image,string voting_arra
         }
     }
 
-    int rho_bucket = size_of_rho/10, theta_bucket = size_of_theta/10;
-    int x_coord_bucket[rho_bucket][theta_bucket],y_coord_bucket[rho_bucket][theta_bucket];
-    for(int i = 0; i < size_of_rho;i+=10){
-        for(int j = 0;j < size_of_theta;j+=10){
-            for(int k=i;k < i+10;k++){
+    int rho_bucket_size = size_of_rho/20, theta_bucket_size = size_of_theta/40;
+    
+    int x_coord_bucket[rho_bucket_size][theta_bucket_size],y_coord_bucket[rho_bucket_size][theta_bucket_size];
+
+    
+    for(int i = 0;i < size_of_rho;i+=20){
+        for(int j = 0;j < size_of_theta;j+=40){
+            for(int k = i;k < i+20;k++){
                 int maxima = 0;
-                for(int l=j;l < j+10;l++){
+                for(int l = j;l < j+40;l++){
                     if (hough_image->GetPixel(k,l) > maxima){
                         maxima = hough_image->GetPixel(k,l);
-                        x_coord_bucket[i/10][j/10] = k;
-                        y_coord_bucket[i/10][j/10] = l;
+                        x_coord_bucket[i/20][j/40] = i ;
+                        y_coord_bucket[i/20][j/40] = j ;
                     }
                 }
             }
         }
     }
-    vector<int> local_maxima;
-    for(int i = 0; i < rho_bucket;i++){
-        for(int j = 0;j < theta_bucket;j++){
-            int x_bucket = x_coord_bucket[i][j], y_bucket = y_coord_bucket[i][j];
-            if(x_coord_bucket[i][j] != 0 && y_coord_bucket[i][j] != 0){
-                int left_pixel = hough_image->GetPixel(x_bucket,y_coord_bucket[i][j-1]); 
-                int right_pixel = hough_image->GetPixel(x_bucket,y_coord_bucket[i][j+1]);
-                int this_pixel = hough_image->GetPixel(x_bucket,y_bucket);
 
-                if(j == 0){
-                    if( this_pixel > right_pixel ){
-                        local_maxima.push_back(x_bucket);
-                        local_maxima.push_back(y_bucket);
-                    }
-
-                }
-                else if(j == theta_bucket-1){
-                    if(this_pixel > left_pixel ){
-                        local_maxima.push_back(x_bucket);
-                        local_maxima.push_back(y_bucket);
-                    }
-
-                }
-                else{
-                    if(this_pixel > right_pixel && this_pixel > left_pixel){
-                        local_maxima.push_back(x_bucket);
-                        local_maxima.push_back(y_bucket);
-                    }
-                }
-            }
-            // cout << "(" << x_coord_bucket[i][j] << "," << y_coord_bucket[i][j] << ") ";
+    for(int i = 0; i < rho_bucket_size; i++){
+        for(int j = 0; j < theta_bucket_size;j++){
+            cout<<"(" << x_coord_bucket[i][j]<< "," << y_coord_bucket[i][j] << ") ";
         }
+        cout << endl;
     }
-
-    for(int i = 0;i < local_maxima.size();i+=2){
-        cout << local_maxima[i] << ","<<local_maxima[i+1] <<" ";
-    }
-
-
 
 
     ofstream open_voting_array;
     open_voting_array.open(voting_array);
+    
+    vector<int> local_maxima;
+    for(int i = 0; i < rho_bucket_size;i++){
+        for(int j = 0;j < theta_bucket_size;j++){
 
+
+
+
+
+        }
+    }
+    
     open_voting_array.close();
 
     

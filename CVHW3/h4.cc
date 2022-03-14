@@ -139,10 +139,10 @@ void draw_lines(Image *an_image, Image *voting_array, Image *stored_votes, int t
 
     for(int i = 0;i < hough_rows;i++){
         for(int j = 0;j < hough_columns;j++){
-            if(voting_array->GetPixel(i,j) > threshold)
-                voting_array->SetPixel(i,j,255);
-            else
+            if(voting_array->GetPixel(i,j) < threshold)
                 voting_array->SetPixel(i,j,0);
+            else
+                voting_array->SetPixel(i,j,255);
         }
     }
 
@@ -164,14 +164,11 @@ void draw_lines(Image *an_image, Image *voting_array, Image *stored_votes, int t
             }
         }
     }
+
     for(int i = 0;i <num_of_objects.size();i++){
         center_row[i] = center_row[i]/centervotearea[i];
         center_column[i] = center_column[i]/centervotearea[i];
     }
-
-    // for(int i = 0;i <num_of_objects.size();i++){
-    //     cout << center_row[i] << " " << center_column[i] << endl;
-    // }
 
     for(int i = 0;i < hough_rows;i++){
         for(int j = 0;j < hough_columns;j++){
@@ -182,13 +179,17 @@ void draw_lines(Image *an_image, Image *voting_array, Image *stored_votes, int t
             }
         }
     }
-
+  
     //rho = row * 5
     //theta = col * 5 * (M_PI/180)
 
+    for(int i = 0;i <num_of_objects.size();i++){
+      center_row[i] = center_row[i] * 5;
+      center_column[i] = center_column[i] * 5 * (M_PI/180);
+
+    }
+
     
-
-
 }
 
 int main(int argc, char **argv){

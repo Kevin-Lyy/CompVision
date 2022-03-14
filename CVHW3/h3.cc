@@ -66,6 +66,7 @@ void hough_transformation(Image *an_image, Image *hough_image,Image *shruken_hou
             small_accumulator[i/5][j/5] = avg;
         }
     }
+    
     for(int i = 0; i < size_of_rho/5;i++){
         for(int j = 0; j < size_of_theta/5;j++){
             shruken_hough_image->SetPixel(i,j,small_accumulator[i][j]);

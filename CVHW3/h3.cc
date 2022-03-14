@@ -50,23 +50,53 @@ void hough_transformation(Image *an_image, Image *hough_image,string voting_arra
         }
     }
 
+    double small_accumulator[size_of_rho/10][size_of_theta/10];
     ofstream open_voting_array;
     open_voting_array.open(voting_array);
     
+    for(int i = 0;i < size_of_rho;i+=10){
+        for(int j = 0;j < size_of_theta;j+=10){
+            string output = "";
+            int avg=0;
+            for(int k = i;k < i+10;k++){   
+                for(int l = j;l < j+10;l++){
+                    avg += hough_image->GetPixel(i,j);
+                }
+            }
+            avg = avg/100;
+            small_accumulator[i/10][j/10] = avg;
+        }
+    }
+    for(int i = 0; i < size_of_rho/10;i++){
+        for(int j = 0; j < size_of_theta/10;j++){
+            open_voting_array << i << " " << j << endl;
+            open_voting_array << small_accumulator[i][j] << endl;
+        }
+    }
+    /*
     for(int i = 0;i < size_of_rho;i+=20){
         for(int j = 0;j < size_of_theta;j+=40){
-            open_voting_array << "Bucket: " << i/20 << " " << j/40 << endl;
+            string output = "";
+            output = output + "Bucket: " + to_string(i/20) + " " + to_string(j/40) + "\n";
+            //open_voting_array << "Bucket: " << i/20 << " " << j/40 << endl;
             for(int k = i;k < i+20;k++){
+                int maxima = 0;
                 for(int l = j;l < j+40;l++){
-                    //if(hough_image->GetPixel(k,l) != 0){
-                        open_voting_array << k << " " << l << endl;
-                        open_voting_array << hough_image->GetPixel(k,l) << " " << k << " " << l*(M_PI/180) << endl;                    
-                    //}
+                    if (hough_image->GetPixel(k,l) > maxima){
+                        maxima = hough_image->GetPixel(k,l);
+                    }
+                    output = output + to_string(k) + " " + to_string(l) + "\n";
+                    output = output + to_string(hough_image->GetPixel(k,l)) + "\n";
+                    output = output + to_string(k) + " " + to_string(l) + "\n";
+                }
+                if(maxima > 0){
+                    output = output + to_string(maxima) + "\n";
+                    open_voting_array << output;
                 }
             }
         }
     }
-    
+    */
     open_voting_array.close();
 
     

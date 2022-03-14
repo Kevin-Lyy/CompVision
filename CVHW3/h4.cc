@@ -106,7 +106,31 @@ void connectedRegions(Image *an_image) {
   }
 }
 
-void draw_lines(Image *an_image, Image *voting_array, int threshold){
+vector<int> objectCount(Image *an_image){
+  vector<int> num_of_objects;
+  const int num_rows = an_image->num_rows();
+  const int num_columns = an_image->num_columns();
+  bool is_in=false;
+
+  for(int i = 1;i < num_rows;i++){
+    for(int j = 1;j < num_columns;j++){
+      if(an_image->GetPixel(i,j) != 0){
+        for(int x = 0;x < num_of_objects.size();x++){
+          if( an_image->GetPixel(i,j) == num_of_objects[x]){
+            is_in = true;
+          }
+        }
+        if(!is_in){
+          num_of_objects.push_back(an_image->GetPixel(i,j));
+        }
+        is_in = false;
+      }
+    }
+  }
+  return num_of_objects;
+}
+
+void draw_lines(Image *an_image, Image *voting_array, Image *stored_votes, int threshold){
     const int num_rows = an_image->num_rows();
     const int num_columns = an_image->num_columns();
 
@@ -124,6 +148,43 @@ void draw_lines(Image *an_image, Image *voting_array, int threshold){
 
     connectedRegions(voting_array);
 
+    vector<int> num_of_objects;
+    num_of_objects = objectCount(voting_array);
+    vector<int> center_column(num_of_objects.size()),center_row(num_of_objects.size());
+    vector<int> centervotearea(num_of_objects.size());
+
+    for(int i = 0;i < hough_rows;i++){
+        for(int j = 0;j < hough_columns;j++){
+            for(int x = 0;x < num_of_objects.size();x++){
+                if(voting_array->GetPixel(i,j) == num_of_objects[x]){
+                    center_row[x] += i*stored_votes->GetPixel(i,j);
+                    center_column[x] += j*stored_votes->GetPixel(i,j);
+                    centervotearea[x] += stored_votes->GetPixel(i,j);
+                }
+            }
+        }
+    }
+    for(int i = 0;i <num_of_objects.size();i++){
+        center_row[i] = center_row[i]/centervotearea[i];
+        center_column[i] = center_column[i]/centervotearea[i];
+    }
+
+    // for(int i = 0;i <num_of_objects.size();i++){
+    //     cout << center_row[i] << " " << center_column[i] << endl;
+    // }
+
+    for(int i = 0;i < hough_rows;i++){
+        for(int j = 0;j < hough_columns;j++){
+            for(int x = 0;x < num_of_objects.size();x++){
+                if(i == center_row[x] && j == center_column[x]){
+                    voting_array->SetPixel(i,j,255);
+                }
+            }
+        }
+    }
+    
+
+
 }
 
 int main(int argc, char **argv){
@@ -138,6 +199,7 @@ int main(int argc, char **argv){
 
     Image an_image;
     Image hough_image;
+    Image stored_votes;
     if (!ReadImage(input_file, &an_image)) {
         cout <<"Can't open file " << input_file << endl;
         return 0;
@@ -148,8 +210,13 @@ int main(int argc, char **argv){
         return 0;
     }
 
+    if (!ReadImage(voting_array, &stored_votes)) {
+        cout <<"Can't open file " << voting_array << endl;
+        return 0;
+    }
 
-    draw_lines(&an_image, &hough_image, threshold);
+
+    draw_lines(&an_image, &hough_image,&stored_votes, threshold);
 
     if (!WriteImage(output_file, hough_image)){
         cout << "Can't write to file " << output_file << endl;

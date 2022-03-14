@@ -10,7 +10,7 @@
 using namespace std;
 using namespace ComputerVisionProjects;
 
-void hough_transformation(Image *an_image, Image *hough_image,string voting_array){
+void hough_transformation(Image *an_image, Image *hough_image,Image *shruken_hough_image){
     const int num_rows = an_image->num_rows();
     const int num_columns = an_image->num_columns();
     int rho,theta;
@@ -21,6 +21,7 @@ void hough_transformation(Image *an_image, Image *hough_image,string voting_arra
     int size_of_theta = 360;
 
     hough_image->AllocateSpaceAndSetSize(size_of_rho,size_of_theta);
+    shruken_hough_image->AllocateSpaceAndSetSize(size_of_rho/10,size_of_theta/10);
 
     double accumulator[size_of_rho][size_of_theta];
     for(int i = 0;i < size_of_rho;i++){
@@ -51,8 +52,6 @@ void hough_transformation(Image *an_image, Image *hough_image,string voting_arra
     }
 
     double small_accumulator[size_of_rho/10][size_of_theta/10];
-    ofstream open_voting_array;
-    open_voting_array.open(voting_array);
     
     for(int i = 0;i < size_of_rho;i+=10){
         for(int j = 0;j < size_of_theta;j+=10){
@@ -69,35 +68,10 @@ void hough_transformation(Image *an_image, Image *hough_image,string voting_arra
     }
     for(int i = 0; i < size_of_rho/10;i++){
         for(int j = 0; j < size_of_theta/10;j++){
-            open_voting_array << i << " " << j << endl;
-            open_voting_array << small_accumulator[i][j] << endl;
+            shruken_hough_image->SetPixel(i,j,small_accumulator[i][j]);
         }
     }
-    /*
-    for(int i = 0;i < size_of_rho;i+=20){
-        for(int j = 0;j < size_of_theta;j+=40){
-            string output = "";
-            output = output + "Bucket: " + to_string(i/20) + " " + to_string(j/40) + "\n";
-            //open_voting_array << "Bucket: " << i/20 << " " << j/40 << endl;
-            for(int k = i;k < i+20;k++){
-                int maxima = 0;
-                for(int l = j;l < j+40;l++){
-                    if (hough_image->GetPixel(k,l) > maxima){
-                        maxima = hough_image->GetPixel(k,l);
-                    }
-                    output = output + to_string(k) + " " + to_string(l) + "\n";
-                    output = output + to_string(hough_image->GetPixel(k,l)) + "\n";
-                    output = output + to_string(k) + " " + to_string(l) + "\n";
-                }
-                if(maxima > 0){
-                    output = output + to_string(maxima) + "\n";
-                    open_voting_array << output;
-                }
-            }
-        }
-    }
-    */
-    open_voting_array.close();
+    
 
     
 }
@@ -109,19 +83,26 @@ int main(int argc, char **argv){
     }
     const string input_file(argv[1]);
     const string output_file(argv[2]);
-    const string output_voting_array(argv[3]);
+    const string output_hough_array(argv[3]);
 
     Image an_image;
     Image hough_image_;
+    Image small_hough_image_;
+
     if (!ReadImage(input_file, &an_image)) {
         cout <<"Can't open file " << input_file << endl;
         return 0;
     }
 
-    hough_transformation(&an_image, &hough_image_, output_voting_array);
+    hough_transformation(&an_image, &hough_image_, &small_hough_image_);
 
     if (!WriteImage(output_file, hough_image_)){
         cout << "Can't write to file " << output_file << endl;
+        return 0;
+    }
+
+    if (!WriteImage(output_hough_array, small_hough_image_)){
+        cout << "Can't write to file " << output_hough_array << endl;
         return 0;
     }
 

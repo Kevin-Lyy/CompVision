@@ -21,7 +21,7 @@ void hough_transformation(Image *an_image, Image *hough_image,Image *shruken_hou
     int size_of_theta = 360;
 
     hough_image->AllocateSpaceAndSetSize(size_of_rho,size_of_theta);
-    shruken_hough_image->AllocateSpaceAndSetSize(size_of_rho/10,size_of_theta/10);
+    shruken_hough_image->AllocateSpaceAndSetSize(size_of_rho/5,size_of_theta/5);
 
     double accumulator[size_of_rho][size_of_theta];
     for(int i = 0;i < size_of_rho;i++){
@@ -51,23 +51,23 @@ void hough_transformation(Image *an_image, Image *hough_image,Image *shruken_hou
         }
     }
 
-    double small_accumulator[size_of_rho/10][size_of_theta/10];
+    double small_accumulator[size_of_rho/5][size_of_theta/5];
     
-    for(int i = 0;i < size_of_rho;i+=10){
-        for(int j = 0;j < size_of_theta;j+=10){
+    for(int i = 0;i < size_of_rho;i+=5){
+        for(int j = 0;j < size_of_theta;j+=5){
             string output = "";
             int avg=0;
-            for(int k = i;k < i+10;k++){   
-                for(int l = j;l < j+10;l++){
+            for(int k = i;k < i+5;k++){   
+                for(int l = j;l < j+5;l++){
                     avg += hough_image->GetPixel(i,j);
                 }
             }
-            avg = avg/100;
-            small_accumulator[i/10][j/10] = avg;
+            avg = avg/25;
+            small_accumulator[i/5][j/5] = avg;
         }
     }
-    for(int i = 0; i < size_of_rho/10;i++){
-        for(int j = 0; j < size_of_theta/10;j++){
+    for(int i = 0; i < size_of_rho/5;i++){
+        for(int j = 0; j < size_of_theta/5;j++){
             shruken_hough_image->SetPixel(i,j,small_accumulator[i][j]);
         }
     }

@@ -139,10 +139,10 @@ void draw_lines(Image *an_image, Image *voting_array, Image *stored_votes, int t
 
     for(int i = 0;i < hough_rows;i++){
         for(int j = 0;j < hough_columns;j++){
-            if(voting_array->GetPixel(i,j) < threshold)
-                voting_array->SetPixel(i,j,0);
-            else
+            if(voting_array->GetPixel(i,j) > threshold)
                 voting_array->SetPixel(i,j,255);
+            else
+                voting_array->SetPixel(i,j,0);
         }
     }
 
@@ -182,6 +182,10 @@ void draw_lines(Image *an_image, Image *voting_array, Image *stored_votes, int t
             }
         }
     }
+
+    //rho = row * 5
+    //theta = col * 5 * (M_PI/180)
+
     
 
 

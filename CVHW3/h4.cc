@@ -10,7 +10,7 @@
 using namespace std;
 using namespace ComputerVisionProjects;
 
-void draw_lines(Image *an_image, string voting_array, int threshold){
+void draw_lines(Image *an_image, Image *voting_array, int threshold){
 
 }
 
@@ -25,13 +25,19 @@ int main(int argc, char **argv){
     const string output_file(argv[4]);
 
     Image an_image;
+    Image hough_image;
     if (!ReadImage(input_file, &an_image)) {
         cout <<"Can't open file " << input_file << endl;
         return 0;
     }
 
+    if (!ReadImage(voting_array, &hough_image)) {
+        cout <<"Can't open file " << voting_array << endl;
+        return 0;
+    }
 
-    draw_lines(&an_image, voting_array, threshold);
+
+    draw_lines(&an_image, &hough_image, threshold);
 
     if (!WriteImage(output_file, an_image)){
         cout << "Can't write to file " << output_file << endl;

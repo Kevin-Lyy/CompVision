@@ -56,7 +56,7 @@ all:
 run:
 	./h1 hough_simple_1.pgm output_h1.pgm
 	./h2 output_h1.pgm 45 output_h2.pgm	
-	./h3 output_h2.pgm output_h3.pgm output_h3_votingarray.txt
+	./h3 output_h2.pgm output_h3.pgm output_h3_votingarray.pgm
 	./h4 hough_simple_1.pgm output_h3_votingarray.txt 50 output_h4.pgm
 
 # Clean files

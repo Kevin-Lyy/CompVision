@@ -45,7 +45,7 @@ int main(int argc, char **argv){
         return 0;
     }
 
-    //P1
+    //H2
     grayToBin(threshold_,&an_image);
 
     if (!WriteImage(output_file, an_image)){

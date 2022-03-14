@@ -29,6 +29,7 @@ void hough_transformation(Image *an_image, Image *hough_image,string voting_arra
         }
     }
 
+    
     double temp_rho;
     for(int i = 0;i < num_rows;i++){
         for(int j = 0;j < num_columns;j++){
@@ -37,9 +38,6 @@ void hough_transformation(Image *an_image, Image *hough_image,string voting_arra
                     temp_rho = i*cos(t) + j*sin(t);
                     if(temp_rho >= 0 && temp_rho < size_of_rho){
                         accumulator[int(temp_rho)][int(t/(M_PI/180))] += 1;
-                        // int temp = hough_image->GetPixel(int(temp_rho),int(t/(M_PI/180)));
-                        // temp++;
-                        // hough_image->SetPixel(int(temp_rho),int(t/(M_PI/180)),temp);
                     }
                 }
             }
@@ -52,45 +50,20 @@ void hough_transformation(Image *an_image, Image *hough_image,string voting_arra
         }
     }
 
-    int rho_bucket_size = size_of_rho/20, theta_bucket_size = size_of_theta/40;
-    
-    int x_coord_bucket[rho_bucket_size][theta_bucket_size],y_coord_bucket[rho_bucket_size][theta_bucket_size];
-
-    
-    for(int i = 0;i < size_of_rho;i+=20){
-        for(int j = 0;j < size_of_theta;j+=40){
-            for(int k = i;k < i+20;k++){
-                int maxima = 0;
-                for(int l = j;l < j+40;l++){
-                    if (hough_image->GetPixel(k,l) > maxima){
-                        maxima = hough_image->GetPixel(k,l);
-                        x_coord_bucket[i/20][j/40] = i ;
-                        y_coord_bucket[i/20][j/40] = j ;
-                    }
-                }
-            }
-        }
-    }
-
-    for(int i = 0; i < rho_bucket_size; i++){
-        for(int j = 0; j < theta_bucket_size;j++){
-            cout<<"(" << x_coord_bucket[i][j]<< "," << y_coord_bucket[i][j] << ") ";
-        }
-        cout << endl;
-    }
-
-
     ofstream open_voting_array;
     open_voting_array.open(voting_array);
     
-    vector<int> local_maxima;
-    for(int i = 0; i < rho_bucket_size;i++){
-        for(int j = 0;j < theta_bucket_size;j++){
-
-
-
-
-
+    for(int i = 0;i < size_of_rho;i+=20){
+        for(int j = 0;j < size_of_theta;j+=40){
+            open_voting_array << "Bucket: " << i/20 << " " << j/40 << endl;
+            for(int k = i;k < i+20;k++){
+                for(int l = j;l < j+40;l++){
+                    //if(hough_image->GetPixel(k,l) != 0){
+                        open_voting_array << k << " " << l << endl;
+                        open_voting_array << hough_image->GetPixel(k,l) << " " << k << " " << l*(M_PI/180) << endl;                    
+                    //}
+                }
+            }
         }
     }
     
@@ -115,8 +88,6 @@ int main(int argc, char **argv){
         return 0;
     }
 
-
-    //H1
     hough_transformation(&an_image, &hough_image_, output_voting_array);
 
     if (!WriteImage(output_file, hough_image_)){

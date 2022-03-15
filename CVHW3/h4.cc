@@ -131,101 +131,115 @@ vector<int> objectCount(Image *an_image){
 }
 
 void draw_lines(Image *an_image, Image *voting_array, Image *stored_votes, int threshold){
-    const int num_rows = an_image->num_rows();
-    const int num_columns = an_image->num_columns();
+  const int num_rows = an_image->num_rows();
+  const int num_columns = an_image->num_columns();
 
-    const int hough_rows = voting_array->num_rows();
-    const int hough_columns = voting_array->num_columns();
+  const int hough_rows = voting_array->num_rows();
+  const int hough_columns = voting_array->num_columns();
+  for(int i = 0;i < hough_rows;i++){
+    for(int j = 0;j < hough_columns;j++){
+      if(voting_array->GetPixel(i,j) < threshold)
+        voting_array->SetPixel(i,j,0);
+      else
+        voting_array->SetPixel(i,j,255);
+    }
+  }
+  connectedRegions(voting_array);
 
-    for(int i = 0;i < hough_rows;i++){
-        for(int j = 0;j < hough_columns;j++){
-            if(voting_array->GetPixel(i,j) < threshold)
-                voting_array->SetPixel(i,j,0);
-            else
-                voting_array->SetPixel(i,j,255);
+  vector<int> num_of_objects;
+  num_of_objects = objectCount(voting_array);
+  vector<int> center_column(num_of_objects.size()),center_row(num_of_objects.size());
+  vector<int> centervotearea(num_of_objects.size());
+
+  for(int i = 0;i < hough_rows;i++){
+    for(int j = 0;j < hough_columns;j++){
+      for(int x = 0;x < num_of_objects.size();x++){
+        if(voting_array->GetPixel(i,j) == num_of_objects[x]){
+          center_row[x] += i*stored_votes->GetPixel(i,j);
+          center_column[x] += j*stored_votes->GetPixel(i,j);
+          centervotearea[x] += stored_votes->GetPixel(i,j);
         }
+      }
     }
+  }
 
-    connectedRegions(voting_array);
+  for(int i = 0;i <num_of_objects.size();i++){
+      center_row[i] = center_row[i]/centervotearea[i];
+      center_column[i] = center_column[i]/centervotearea[i];
+  }
 
-    vector<int> num_of_objects;
-    num_of_objects = objectCount(voting_array);
-    vector<int> center_column(num_of_objects.size()),center_row(num_of_objects.size());
-    vector<int> centervotearea(num_of_objects.size());
+  for(int i = 0;i <num_of_objects.size();i++){
+    double rho,theta;
+    rho = center_row[i]*1.0;
+    theta = center_column[i] * (M_PI/180);
 
-    for(int i = 0;i < hough_rows;i++){
-        for(int j = 0;j < hough_columns;j++){
-            for(int x = 0;x < num_of_objects.size();x++){
-                if(voting_array->GetPixel(i,j) == num_of_objects[x]){
-                    center_row[x] += i*stored_votes->GetPixel(i,j);
-                    center_column[x] += j*stored_votes->GetPixel(i,j);
-                    centervotearea[x] += stored_votes->GetPixel(i,j);
-                }
-            }
-        }
-    }
 
-    for(int i = 0;i <num_of_objects.size();i++){
-        center_row[i] = center_row[i]/centervotearea[i];
-        center_column[i] = center_column[i]/centervotearea[i];
-    }
+    int x_0,y_0,x_end,y_end;
+    y_0 = rho/sin(theta);
+    x_0 = rho/cos(theta);
 
-    for(int i = 0;i < hough_rows;i++){
-        for(int j = 0;j < hough_columns;j++){
-            for(int x = 0;x < num_of_objects.size();x++){
-                if(i == center_row[x] && j == center_column[x]){
-                    voting_array->SetPixel(i,j,255);
-                }
-            }
-        }
-    }
-  
-    //rho = row * 5
-    //theta = col * 5 * (M_PI/180)
+    y_end = (rho - (num_rows-1)*cos(theta)) / sin(theta);
+    x_end = (rho - (num_columns-1)*sin(theta)) / cos(theta);
 
-    for(int i = 0;i <num_of_objects.size();i++){
-      center_row[i] = center_row[i] * 5;
-      center_column[i] = center_column[i] * 5 * (M_PI/180);
+
+    if(x_0 > 0 && x_0 < num_rows){
+      if(y_0 > 0 && y_0 < num_columns)
+        DrawLine(x_0,0,0,y_0,255,an_image);
+
+      else if(x_end > 0 && x_end < num_rows)
+        DrawLine(x_0,0,x_end,num_columns-1,255,an_image);
+
+      else if(y_end > 0 && y_end < num_columns)
+        DrawLine(x_0,0,num_rows-1,y_end,255,an_image);
 
     }
+    else if(y_0 > 0 && y_0 < num_columns){
+      if(x_end > 0 && x_end < num_rows)
+        DrawLine(0,y_0,x_end,num_columns-1,255,an_image);
 
-    
+      else if(y_end > 0 && y_end < num_columns)
+        DrawLine(0,y_0,num_rows-1,y_end,255,an_image);
+    }
+    else if(x_end > 0 && x_end < num_rows){
+      if(y_end > 0 && y_end < num_columns)
+        DrawLine(x_end,num_columns-1,num_rows-1,y_end,255,an_image);
+    }    
+  }
 }
 
 int main(int argc, char **argv){
-    if (argc!=5) {
-        printf("Usage: %s file1 file2\n", argv[0]);
-        return 0;
-    }
-    const string input_file(argv[1]);
-    const string voting_array(argv[2]);
-    const int threshold(stoi(argv[3]));
-    const string output_file(argv[4]);
+  if (argc!=5) {
+    printf("Usage: %s file1 file2\n", argv[0]);
+    return 0;
+  }
+  const string input_file(argv[1]);
+  const string voting_array(argv[2]);
+  const int threshold(stoi(argv[3]));
+  const string output_file(argv[4]);
 
-    Image an_image;
-    Image hough_image;
-    Image stored_votes;
-    if (!ReadImage(input_file, &an_image)) {
-        cout <<"Can't open file " << input_file << endl;
-        return 0;
-    }
+  Image an_image;
+  Image hough_image;
+  Image stored_votes;
+  if (!ReadImage(input_file, &an_image)) {
+    cout <<"Can't open file " << input_file << endl;
+    return 0;
+  }
 
-    if (!ReadImage(voting_array, &hough_image)) {
-        cout <<"Can't open file " << voting_array << endl;
-        return 0;
-    }
+  if (!ReadImage(voting_array, &hough_image)) {
+    cout <<"Can't open file " << voting_array << endl;
+    return 0;
+  }
 
-    if (!ReadImage(voting_array, &stored_votes)) {
-        cout <<"Can't open file " << voting_array << endl;
-        return 0;
-    }
+  if (!ReadImage(voting_array, &stored_votes)) {
+    cout <<"Can't open file " << voting_array << endl;
+    return 0;
+  }
 
 
-    draw_lines(&an_image, &hough_image,&stored_votes, threshold);
+  draw_lines(&an_image, &hough_image, &stored_votes, threshold);
 
-    if (!WriteImage(output_file, hough_image)){
-        cout << "Can't write to file " << output_file << endl;
-        return 0;
-    }
-
+  if (!WriteImage(output_file, an_image)){
+    cout << "Can't write to file " << output_file << endl;
+    return 0;
+  }
 }

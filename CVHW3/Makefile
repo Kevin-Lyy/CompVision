@@ -1,8 +1,9 @@
-##########################################
+########################################## 
 ##
-## Makefile for Assignment No. 2
+## Makefile for Assignment No. 3
 ## LINUX Compilation
-## 
+## KEVIN LY
+##
 ##########################################
 
 # FLAGS
@@ -54,10 +55,10 @@ all:
 
 
 run:
-	./h1 hough_complex_1.pgm output_h1.pgm
-	./h2 output_h1.pgm 90 output_h2.pgm	
+	./h1 hough_simple_2.pgm output_h1.pgm
+	./h2 output_h1.pgm 100 output_h2.pgm	
 	./h3 output_h2.pgm output_h3.pgm output_h3_votingarray.pgm
-	./h4 hough_complex_1.pgm output_h3_votingarray.pgm 160 output_h4.pgm
+	./h4 hough_simple_2.pgm output_h3_votingarray.pgm 180 output_h4.pgm
 
 # Clean files
 clean:

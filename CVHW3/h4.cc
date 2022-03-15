@@ -1,10 +1,11 @@
 // KEVIN LY
+// H4
+// Takes the information from the hough image and draws lines that span where edges were detected
 #include "image.h"
 #include <cstdio>
 #include <iostream>
 #include <string>
 #include <cmath>
-#include <fstream>
 #include <vector>
 
 using namespace std;
@@ -106,6 +107,8 @@ void connectedRegions(Image *an_image) {
   }
 }
 
+// This function loops through an image that has its connected regions labels and returns a vector with them
+// parameter: the image 
 vector<int> objectCount(Image *an_image){
   vector<int> num_of_objects;
   const int num_rows = an_image->num_rows();
@@ -130,12 +133,15 @@ vector<int> objectCount(Image *an_image){
   return num_of_objects;
 }
 
-void draw_lines(Image *an_image, Image *voting_array, Image *stored_votes, int threshold){
+// This is the function that processes the hough image data, finds the most voted for coordinates and draws
+// lines based on those
+void drawDetectedLines(Image *an_image, Image *voting_array, Image *stored_votes, int threshold){
   const int num_rows = an_image->num_rows();
   const int num_columns = an_image->num_columns();
 
   const int hough_rows = voting_array->num_rows();
   const int hough_columns = voting_array->num_columns();
+  //Threshold the image
   for(int i = 0;i < hough_rows;i++){
     for(int j = 0;j < hough_columns;j++){
       if(voting_array->GetPixel(i,j) < threshold)
@@ -144,8 +150,11 @@ void draw_lines(Image *an_image, Image *voting_array, Image *stored_votes, int t
         voting_array->SetPixel(i,j,255);
     }
   }
+
+  // Find connected region
   connectedRegions(voting_array);
 
+  // Find the most voted for centers by weighted averages
   vector<int> num_of_objects;
   num_of_objects = objectCount(voting_array);
   vector<int> center_column(num_of_objects.size()),center_row(num_of_objects.size());
@@ -168,20 +177,23 @@ void draw_lines(Image *an_image, Image *voting_array, Image *stored_votes, int t
       center_column[i] = center_column[i]/centervotearea[i];
   }
 
+  // using all that information determine rho and theta pick arbitrary x and y values and draw the lines
   for(int i = 0;i <num_of_objects.size();i++){
     double rho,theta;
     rho = center_row[i]*1.0;
     theta = center_column[i] * (M_PI/180);
 
-
+    // if x or y are 0 then find y or x
     int x_0,y_0,x_end,y_end;
     y_0 = rho/sin(theta);
     x_0 = rho/cos(theta);
 
+    // if x or y are at the border then find y or x
     y_end = (rho - (num_rows-1)*cos(theta)) / sin(theta);
     x_end = (rho - (num_columns-1)*sin(theta)) / cos(theta);
 
 
+    // After finding those 4 potenial points draw lines between two points that are within the image
     if(x_0 > 0 && x_0 < num_rows){
       if(y_0 > 0 && y_0 < num_columns)
         DrawLine(x_0,0,0,y_0,255,an_image);
@@ -191,7 +203,6 @@ void draw_lines(Image *an_image, Image *voting_array, Image *stored_votes, int t
 
       else if(y_end > 0 && y_end < num_columns)
         DrawLine(x_0,0,num_rows-1,y_end,255,an_image);
-
     }
     else if(y_0 > 0 && y_0 < num_columns){
       if(x_end > 0 && x_end < num_rows)
@@ -235,8 +246,8 @@ int main(int argc, char **argv){
     return 0;
   }
 
-
-  draw_lines(&an_image, &hough_image, &stored_votes, threshold);
+  //H4
+  drawDetectedLines(&an_image, &hough_image, &stored_votes, threshold);
 
   if (!WriteImage(output_file, an_image)){
     cout << "Can't write to file " << output_file << endl;

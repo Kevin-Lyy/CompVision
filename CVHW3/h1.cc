@@ -1,4 +1,7 @@
 // KEVIN LY
+// H1
+// This file goes through the image and uses Sobel's operator to detect edges and mark them down on the image
+// if it isnt an edge set to 0 else set it to a value calculated by surrounding pixels
 #include "image.h"
 #include <cstdio>
 #include <iostream>
@@ -9,16 +12,21 @@
 using namespace std;
 using namespace ComputerVisionProjects;
 
+// this is the function that detects edges by going through them and applying sobel's operator both the x and y 
+// squaring them then summing them then finding the square root to get an image with its edges detected
+//    x             y
+// -1  0  1       1  2  1 
+// -2  0  2       0  0  0  
+// -1  0  1      -1 -2 -1 
 void locateEdges(Image *an_image){
   const int num_rows = an_image->num_rows();
   const int num_columns = an_image->num_columns();
 
   double edge_array[num_rows][num_columns];
 
-
   for(int i = 1;i < num_rows-1;i++){
     for(int j = 1;j < num_columns-1;j++){
-      double derivative_of_x, derivative_of_y,epsilon,delta_sqr,mask;
+      double derivative_of_x, derivative_of_y,delta_sqr;
 
       derivative_of_x = -1* an_image->GetPixel(i-1,j-1)+ an_image->GetPixel(i+1,j-1) + -2*an_image->GetPixel(i-1,j) 
       + 2*an_image->GetPixel(i+1,j) + -1*an_image->GetPixel(i-1,j+1) + an_image->GetPixel(i+1,j+1);

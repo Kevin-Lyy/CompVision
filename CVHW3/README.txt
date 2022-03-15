@@ -29,7 +29,7 @@ i. Which parts of your assignment were completed
             void drawDetectedLines(Image *an_image, Image *voting_array, Image *stored_votes, int threshold)
 
 ii. Any bugs that you have encountered
-    
+
 
 iii. Complete instructions of how to run your program(s).
     make clean

@@ -13,7 +13,7 @@ using namespace ComputerVisionProjects;
 // This function goes through the image pixel by pixel and if the pixel is less than the threshold
 // set the color black otherwise set it white 
 // parameters: threshold, the image 
-void grayToBin(int threshold, Image *an_image) {
+void grayToBin(int threshold, Image *an_image){
   if (an_image == nullptr) abort();
   const int num_rows = an_image->num_rows();
   const int num_columns = an_image->num_columns();

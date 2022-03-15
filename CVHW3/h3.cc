@@ -1,27 +1,30 @@
 // KEVIN LY
+// H3
+// This file creates a hough image out of the edges of an image by going through the edges running a formula
+// setting those new points into an image and returning it along with a voting array which demonstrates the 
+// votes of a line on the image
 #include "image.h"
 #include <cstdio>
 #include <iostream>
 #include <string>
 #include <cmath>
-#include <fstream>
 #include <vector>
 
 using namespace std;
 using namespace ComputerVisionProjects;
 
+// This is the function that creates the hough image out of an image with edges, given the x and y it determines the
+// rho and theta of the hough image using rho = xcos(theta) + ysin(theta) 
 void hough_transformation(Image *an_image, Image *hough_image){
     const int num_rows = an_image->num_rows();
     const int num_columns = an_image->num_columns();
-    int rho,theta;
-    rho = an_image->num_columns();
-    theta = an_image->num_rows();
 
+    // creating an empty hough image
     int size_of_rho = sqrt(pow(num_rows,2)+pow(num_columns,2));
     int size_of_theta = 360;
-
     hough_image->AllocateSpaceAndSetSize(size_of_rho,size_of_theta);
 
+    // accumlator array that will be iterated and create the hough image
     double accumulator[size_of_rho][size_of_theta];
     for(int i = 0;i < size_of_rho;i++){
         for(int j = 0;j < size_of_theta;j++){
@@ -29,6 +32,8 @@ void hough_transformation(Image *an_image, Image *hough_image){
         }
     }
 
+    // goes through given image with edges and determines the points on the hough array by calculating
+    // rho with 0 <= theta < pi/180
     double temp_rho;
     for(int i = 0;i < num_rows;i++){
         for(int j = 0;j < num_columns;j++){
@@ -49,27 +54,6 @@ void hough_transformation(Image *an_image, Image *hough_image){
         }
     }
 
-    // double small_accumulator[size_of_rho/5][size_of_theta/5];
-
-    // for(int i = 0;i < size_of_rho;i+=5){
-    //     for(int j = 0;j < size_of_theta;j+=5){
-    //         string output = "";
-    //         int avg=0;
-    //         for(int k = i;k < i+5;k++){   
-    //             for(int l = j;l < j+5;l++){
-    //                 avg += hough_image->GetPixel(i,j);
-    //             }
-    //         }
-    //         avg = avg/25;
-    //         small_accumulator[i/5][j/5] = avg;
-    //     }
-    // }
-
-    // for(int i = 0; i < size_of_rho/5;i++){
-    //     for(int j = 0; j < size_of_theta/5;j++){
-    //         shruken_hough_image->SetPixel(i,j,small_accumulator[i][j]);
-    //     }
-    // }
 }
 
 int main(int argc, char **argv){
@@ -89,6 +73,7 @@ int main(int argc, char **argv){
         return 0;
     }
 
+    //H3
     hough_transformation(&an_image, &hough_image_);
 
     if (!WriteImage(output_file, hough_image_)){

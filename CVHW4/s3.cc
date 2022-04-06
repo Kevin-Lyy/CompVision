@@ -24,13 +24,43 @@ vector<double> invertMatrix(string input){
             matrix_vector.push_back(parameter);
         }
     } 
-    //output_matrix[0] = 
+    //ad - bc
+    //0 1 2
+    //3 4 5
+    //6 7 8
+    // 1 <-> 3
+    // 2 <-> 6
+    // 5 <-> 7
+
+    output_matrix[0] = matrix_vector[4]* matrix_vector[8] - matrix_vector[5]*matrix_vector[7];
+    output_matrix[1] = -1*(matrix_vector[3]* matrix_vector[8] - matrix_vector[5]*matrix_vector[6]);
+    output_matrix[2] = matrix_vector[3]* matrix_vector[7] - matrix_vector[4]*matrix_vector[6];
+    output_matrix[3] = -1*(matrix_vector[1]* matrix_vector[8] - matrix_vector[2]*matrix_vector[7]);
+    output_matrix[4] = matrix_vector[0]* matrix_vector[8] - matrix_vector[2]*matrix_vector[6];
+    output_matrix[5] = -1*(matrix_vector[0]* matrix_vector[7] - matrix_vector[1]*matrix_vector[6]);
+    output_matrix[6] = matrix_vector[1]* matrix_vector[5] - matrix_vector[2]*matrix_vector[4];
+    output_matrix[7] = -1*(matrix_vector[0]* matrix_vector[5] - matrix_vector[2]*matrix_vector[3]);
+    output_matrix[8] = matrix_vector[0]* matrix_vector[4] - matrix_vector[1]*matrix_vector[3];
+    double determinant = matrix_vector[0]*output_matrix[0] - matrix_vector[1]*-1*output_matrix[1] + matrix_vector[2]*output_matrix[2];
+    output_matrix[1] = -1*(matrix_vector[1]* matrix_vector[8] - matrix_vector[2]*matrix_vector[7]);
+    output_matrix[3] = -1*(matrix_vector[3]* matrix_vector[8] - matrix_vector[5]*matrix_vector[6]);
+    output_matrix[2] = matrix_vector[1]* matrix_vector[5] - matrix_vector[2]*matrix_vector[4];
+    output_matrix[6] = matrix_vector[3]* matrix_vector[7] - matrix_vector[4]*matrix_vector[6];
+    output_matrix[5] = -1*(matrix_vector[0]* matrix_vector[5] - matrix_vector[2]*matrix_vector[3]);
+    output_matrix[7] = -1*(matrix_vector[0]* matrix_vector[7] - matrix_vector[1]*matrix_vector[6]);
+
+    for(int i = 0;i < 9;i++){
+        output_matrix[i] = output_matrix[i]/determinant;
+        cout <<output_matrix[i] << " ";
+        if(i==2 || i == 5){
+            cout << "\n";
+        }
+    }
     return output_matrix;
 
 }
 
 void calculateSurfaceNormals(vector<double> inverted_matrix,Image *an_image,Image *an_image_2,Image *an_image_3,int step, int threshold){
-    
     const int num_rows = an_image->num_rows();
     const int num_columns = an_image->num_columns();
     for(int i = 0;i < num_rows;i+=step){

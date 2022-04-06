@@ -34,13 +34,13 @@ PROGRAM_2 = s2
 $(PROGRAM_2): $(ALL_OBJ2)
 	g++ $(C++FLAG) -o $(EXEC_DIR)/$@ $(ALL_OBJ2) $(INCLUDES) $(LIBS_ALL)
 
-# # H3
-# ALL_OBJ3 = image.o s3.o
-# PROGRAM_3 = s3
-# $(PROGRAM_3): $(ALL_OBJ3)
-# 	g++ $(C++FLAG) -o $(EXEC_DIR)/$@ $(ALL_OBJ3) $(INCLUDES) $(LIBS_ALL)
+# S3
+ALL_OBJ3 = image.o s3.o
+PROGRAM_3 = s3
+$(PROGRAM_3): $(ALL_OBJ3)
+	g++ $(C++FLAG) -o $(EXEC_DIR)/$@ $(ALL_OBJ3) $(INCLUDES) $(LIBS_ALL)
 
-# # H4
+# # S4
 # ALL_OBJ4 = image.o s4.o 
 # PROGRAM_4 = s4
 # $(PROGRAM_4): $(ALL_OBJ4)
@@ -50,12 +50,14 @@ $(PROGRAM_2): $(ALL_OBJ2)
 all:
 	make $(PROGRAM_1)
 	make $(PROGRAM_2)
+	make $(PROGRAM_3)
 
 
 
 run:
 	./s1 sphere0.pgm 100 radiusAndCenter.txt
 	./s2 radiusAndCenter.txt sphere1.pgm sphere2.pgm sphere3.pgm outputDirections.txt
+	./s3 outputDirections.txt object1.pgm object2.pgm object3.pgm 5 100 objectout.pgm
 
 
 # Clean files

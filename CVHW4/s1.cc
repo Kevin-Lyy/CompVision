@@ -107,5 +107,4 @@ int main(int argc, char **argv){
     findSphere(threshold_,&an_image,output_file);
 
 
-
 }

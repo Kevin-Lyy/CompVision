@@ -13,7 +13,8 @@
 using namespace std;
 using namespace ComputerVisionProjects;
 
-void calculate_light_source(Image *an_image, vector<int> sphere_properties){
+vector<double> calculate_light_source(Image *an_image, vector<double> sphere_properties){
+    vector<double> output;
     int brightestX=0,brightestY=0,brightest_pixel;
     const int num_rows = an_image->num_rows();
     const int num_columns = an_image->num_columns();
@@ -28,22 +29,23 @@ void calculate_light_source(Image *an_image, vector<int> sphere_properties){
     }
 
 
-    int x_component = brightestX - sphere_properties[0];
-    int y_component = brightestY - sphere_properties[1];
-    int z_input = pow(sphere_properties[2],2) - pow(x_component,2) - pow(y_component,2);
+    double x_component = brightestX - sphere_properties[0];
+    double y_component = brightestY - sphere_properties[1];
+    double z_input = pow(sphere_properties[2],2) - pow(x_component,2) - pow(y_component,2);
 
-    int z_component = pow( z_input,0.5);
+    double z_component = pow( z_input,0.5);
 
-    int direction_input = pow(sphere_properties[2],2) + pow(x_component,2) + pow(y_component,2);
-    int directional_magnitude = pow(direction_input ,0.5);
+    double direction_input = pow(sphere_properties[2],2) + pow(x_component,2) + pow(y_component,2);
+    double directional_magnitude = pow(direction_input ,0.5);
 
-    //scaled_x_component = x_component * brightest_pixel_value / direction_magnitude
-    //scaled_y_component = y_component * brightest_pixel_value / direction_magnitude
-    //scaled_z_component = z_component * brightest_pixel_value / direction_magnitude
-
-    int scaled_x =  x_component * brightest_pixel/directional_magnitude;
-    int scaled_y =  y_component * brightest_pixel/directional_magnitude;
-    int scaled_z =  z_component * brightest_pixel/directional_magnitude;
+    double scaled_x =  x_component * brightest_pixel/directional_magnitude;
+    double scaled_y =  y_component * brightest_pixel/directional_magnitude;
+    double scaled_z =  z_component * brightest_pixel/directional_magnitude;
+    output.push_back(scaled_x);
+    output.push_back(scaled_y);
+    output.push_back(scaled_z);
+    //cout << scaled_x << " " << scaled_y << " " <<scaled_z << endl;
+    return output;
 }
 
 void s2(string input, Image *an_image,Image *an_image_2,Image *an_image_3,string out_put){
@@ -59,6 +61,17 @@ void s2(string input, Image *an_image,Image *an_image_2,Image *an_image_3,string
         }
     } 
     open_parameters.close();
+    ofstream output_file;
+    output_file.open(out_put);
+    vector<double> write_to_file;
+    write_to_file = calculate_light_source(an_image,parameters);
+    output_file << write_to_file[0] << " " << write_to_file[1] << " " << write_to_file[2] << "\n";
+    write_to_file = calculate_light_source(an_image_2,parameters);
+    output_file << write_to_file[0] << " " << write_to_file[1] << " " << write_to_file[2] << "\n";
+    write_to_file = calculate_light_source(an_image_3,parameters);
+    output_file << write_to_file[0] << " " << write_to_file[1] << " " << write_to_file[2];
+
+    output_file.close();
 
 }
 

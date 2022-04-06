@@ -83,7 +83,7 @@ void findSphere(int threshold, Image *an_image,string out_put){
 //   cout << radius << endl;
 //   DrawLine(left_most,center_column,right_most,center_column,100,an_image);
 //   DrawLine(center_row,top_most,center_row,bottom_most,100,an_image);
-
+  output_file.close();
 
 }
 

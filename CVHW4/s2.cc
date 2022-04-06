@@ -48,7 +48,7 @@ vector<double> calculate_light_source(Image *an_image, vector<double> sphere_pro
     return output;
 }
 
-void s2(string input, Image *an_image,Image *an_image_2,Image *an_image_3,string out_put){
+void directionsAndIntensities(string input, Image *an_image,Image *an_image_2,Image *an_image_3,string out_put){
     ifstream open_parameters; 
     open_parameters.open(input);
     string line = "";
@@ -102,9 +102,7 @@ int main(int argc, char **argv){
     }
 
     //S2
-    //findSphere(threshold_,&an_image,output_file);
-    s2(input_param,&an_image_1,&an_image_2,&an_image_3,output_file);
-
+    directionsAndIntensities(input_param,&an_image_1,&an_image_2,&an_image_3,output_file);
 
 
 }

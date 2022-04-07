@@ -70,8 +70,6 @@ void calculateSurfaceNormals(vector<double> inverted_matrix,Image *an_image,Imag
             normal_image_2.push_back(normal);
             normal = pixel1*inverted_matrix[6] + pixel2*inverted_matrix[7] + pixel3*inverted_matrix[8];
             normal_image_3.push_back(normal);
-            //cout << an_image->GetPixel(i,j)*inverted_matrix[0] << " "<<an_image_2->GetPixel(i,j)*inverted_matrix[1] << " "<< an_image_3->GetPixel(i,j) << endl;
-        
         }
     }
 
@@ -82,11 +80,15 @@ void calculateSurfaceNormals(vector<double> inverted_matrix,Image *an_image,Imag
         normal_magnitude[i] = pow(temp,0.5);
     }
     vector<double> unit_normal_x(normal_image_1.size()),unit_normal_y(normal_image_1.size());
-
+    
     for(int i = 0;i < normal_image_1.size();i++){
         unit_normal_x[i] = normal_image_1[i]/normal_magnitude[i];
         unit_normal_y[i] = normal_image_2[i]/normal_magnitude[i];
     }
+
+        for(int i = 0;i<normal_image_1.size();i++){
+    }
+
     int counter = 0;
     for(int i = step;i < num_rows;i+=step){
         for(int j = step;j < num_columns;j+=step){

@@ -80,8 +80,10 @@ void surfaceAlbedo(vector<double> inverted_matrix,Image *an_image,Image *an_imag
     int counter = 0;
     for(int i = 0;i < num_rows;i++){
         for(int j = 0;j < num_columns;j++){
-            an_image->SetPixel(i,j,255*albedo[counter]/max_albedo);
-            //cout << albedo[counter] << " ";
+            if(an_image->GetPixel(i,j) > threshold && an_image_2->GetPixel(i,j) > threshold && an_image_3->GetPixel(i,j) > threshold)
+                an_image->SetPixel(i,j,255*albedo[counter]/max_albedo);
+            else
+                an_image->SetPixel(i,j,0);
             counter++;
             
         }

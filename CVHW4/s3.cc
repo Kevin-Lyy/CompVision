@@ -51,27 +51,62 @@ vector<double> invertMatrix(string input){
 
     for(int i = 0;i < 9;i++){
         output_matrix[i] = output_matrix[i]/determinant;
-        cout <<output_matrix[i] << " ";
-        if(i==2 || i == 5){
-            cout << "\n";
-        }
     }
     return output_matrix;
 
 }
 
 void calculateSurfaceNormals(vector<double> inverted_matrix,Image *an_image,Image *an_image_2,Image *an_image_3,int step, int threshold){
+    vector<double> normal_image_1, normal_image_2, normal_image_3;
+    double normal;
     const int num_rows = an_image->num_rows();
     const int num_columns = an_image->num_columns();
-    for(int i = 0;i < num_rows;i+=step){
-        for(int j = 0;j < num_columns;j+=step){
-            
+    for(int i = step;i < num_rows;i+=step){
+        for(int j = step;j < num_columns;j+=step){
+            int pixel1 = an_image->GetPixel(i,j),pixel2 = an_image_2->GetPixel(i,j), pixel3 =  an_image_3->GetPixel(i,j);
+            normal = pixel1*inverted_matrix[0] + pixel2*inverted_matrix[1] + pixel3*inverted_matrix[2];
+            normal_image_1.push_back(normal);
+            normal = pixel1*inverted_matrix[3] + pixel2*inverted_matrix[4] + pixel3*inverted_matrix[5];
+            normal_image_2.push_back(normal);
+            normal = pixel1*inverted_matrix[6] + pixel2*inverted_matrix[7] + pixel3*inverted_matrix[8];
+            normal_image_3.push_back(normal);
+            //cout << an_image->GetPixel(i,j)*inverted_matrix[0] << " "<<an_image_2->GetPixel(i,j)*inverted_matrix[1] << " "<< an_image_3->GetPixel(i,j) << endl;
+        
         }
     }
 
 
-}
+    vector<double> normal_magnitude(normal_image_1.size());
+    for(int i = 0;i < normal_image_1.size();i++){
+        double temp = pow(normal_image_1[i],2) + pow(normal_image_2[i],2) + pow(normal_image_3[i],2);
+        normal_magnitude[i] = pow(temp,0.5);
+    }
+    vector<double> unit_normal_x(normal_image_1.size()),unit_normal_y(normal_image_1.size());
 
+    for(int i = 0;i < normal_image_1.size();i++){
+        unit_normal_x[i] = normal_image_1[i]/normal_magnitude[i];
+        unit_normal_y[i] = normal_image_2[i]/normal_magnitude[i];
+    }
+    int counter = 0;
+    for(int i = step;i < num_rows;i+=step){
+        for(int j = step;j < num_columns;j+=step){
+            if(an_image->GetPixel(i,j) > threshold && an_image_2->GetPixel(i,j) > threshold && an_image_3->GetPixel(i,j) > threshold){
+                DrawLine(i,j,i+unit_normal_x[counter]*10,j+unit_normal_y[counter]*10,255,an_image);
+                an_image->SetPixel(i,j,0);
+                an_image->SetPixel(i+1,j+1,255);
+                an_image->SetPixel(i,j+1,255);
+                an_image->SetPixel(i+1,j,255);
+                an_image->SetPixel(i-1,j,255);
+                an_image->SetPixel(i-1,j-1,255);
+                an_image->SetPixel(i,j-1,255);
+
+            }
+            counter++;
+            
+        }
+    }
+}
+    
 
 int main(int argc, char **argv){
     if (argc!=8) {
@@ -112,3 +147,4 @@ int main(int argc, char **argv){
     }
 
 }
+

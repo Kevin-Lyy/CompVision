@@ -1,4 +1,6 @@
 // KEVIN LY
+// This file given 3 images (same image with different lighting) calculates the intensity and direction of the
+// lighting and puts the x y z components of the vector computed by each light souce
 #include "image.h"
 #include <cstdio>
 #include <iostream>
@@ -13,6 +15,9 @@
 using namespace std;
 using namespace ComputerVisionProjects;
 
+// This function given an image and the properties of the image returns the calculated x y z components 
+// of the image based on the the lighting from source i
+// the parameters are image and a vector of the properties of the sphere (center and radius)
 vector<double> calculate_light_source(Image *an_image, vector<double> sphere_properties){
     vector<double> output;
     int brightestX=0,brightestY=0,brightest_pixel;
@@ -27,12 +32,10 @@ vector<double> calculate_light_source(Image *an_image, vector<double> sphere_pro
             }
         }
     }
-
-
     double x_component = brightestX - sphere_properties[0];
     double y_component = brightestY - sphere_properties[1];
-    double z_input = pow(sphere_properties[2],2) - pow(x_component,2) - pow(y_component,2);
 
+    double z_input = pow(sphere_properties[2],2) - pow(x_component,2) - pow(y_component,2);
     double z_component = pow( z_input,0.5);
 
     double direction_input = pow(sphere_properties[2],2) + pow(x_component,2) + pow(y_component,2);
@@ -44,10 +47,11 @@ vector<double> calculate_light_source(Image *an_image, vector<double> sphere_pro
     output.push_back(scaled_x);
     output.push_back(scaled_y);
     output.push_back(scaled_z);
-    //cout << scaled_x << " " << scaled_y << " " <<scaled_z << endl;
     return output;
 }
 
+// This is the function that writes the calculated light intensity and direction into a file
+// the paramters are the properties of the sphere, the images with different lighting and the output
 void directionsAndIntensities(string input, Image *an_image,Image *an_image_2,Image *an_image_3,string out_put){
     ifstream open_parameters; 
     open_parameters.open(input);
@@ -63,6 +67,7 @@ void directionsAndIntensities(string input, Image *an_image,Image *an_image_2,Im
     open_parameters.close();
     ofstream output_file;
     output_file.open(out_put);
+
     vector<double> write_to_file;
     write_to_file = calculate_light_source(an_image,parameters);
     output_file << write_to_file[0] << " " << write_to_file[1] << " " << write_to_file[2] << "\n";
@@ -100,9 +105,6 @@ int main(int argc, char **argv){
         cout <<"Can't open file " << input_file3 << endl;
         return 0;
     }
-
     //S2
     directionsAndIntensities(input_param,&an_image_1,&an_image_2,&an_image_3,output_file);
-
-
 }

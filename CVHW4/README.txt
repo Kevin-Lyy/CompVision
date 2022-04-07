@@ -10,6 +10,8 @@ i. Which parts of your assignment were completed
             void findSphere(int threshold, Image *an_image,string out_put)
     
     s2:
+        formulas: z_component: sqrt(radius^2 - x_component^2 - y_component^2)^2)
+                  directional_magnitude: sqrt(radius^2 + x_component^2 + y_component^2)^2)
         s2.cc  
             vector<double> calculate_light_source(Image *an_image, vector<double> sphere_properties) 
             
@@ -18,6 +20,7 @@ i. Which parts of your assignment were completed
     s3:
         threshold: 100
         step: 10
+        formulas: inverse matrix, normals:sqrt(x^2+y^2+z^2)
         s3.cc  
             vector<double> invertMatrix(string input)
 

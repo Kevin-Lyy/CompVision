@@ -1,4 +1,6 @@
 // KEVIN LY
+// This file goes through the image (given a sphere) and finds the center coordinates and radius 
+// Then exports a file with those coordinates and radius
 #include "image.h"
 #include <cstdio>
 #include <iostream>
@@ -35,7 +37,9 @@ int getCenterXorY(ComputerVisionProjects::Image *an_image, bool x_or_y){
   return center_pixel;
 }
 
-
+// This function takes the sphere, thresholds it, finds the difference between leftmost and rightmost
+// topmost and bottom-most, averages them and halves it for the radius  
+// parameter: image, threshold, outputfile
 void findSphere(int threshold, Image *an_image,string out_put){
   if (an_image == nullptr) abort();
   const int num_rows = an_image->num_rows();
@@ -53,7 +57,6 @@ void findSphere(int threshold, Image *an_image,string out_put){
   }
   int center_column = getCenterXorY(an_image,1);
   int center_row = getCenterXorY(an_image,0);
-  //an_image->SetPixel(center_row,center_column,100);
 
   int left_most=center_row,right_most=center_row,bottom_most=center_column,top_most=center_column;
   for(int i = 0;i < num_rows;i++){
@@ -78,11 +81,6 @@ void findSphere(int threshold, Image *an_image,string out_put){
   ofstream output_file;
   output_file.open(out_put);
   output_file << center_row << " " << center_column << " " << radius;
-//   cout << left_most <<" " << right_most << endl;
-//   cout << top_most << " " << bottom_most << endl;
-//   cout << radius << endl;
-//   DrawLine(left_most,center_column,right_most,center_column,100,an_image);
-//   DrawLine(center_row,top_most,center_row,bottom_most,100,an_image);
   output_file.close();
 
 }
@@ -105,6 +103,4 @@ int main(int argc, char **argv){
 
     //S1
     findSphere(threshold_,&an_image,output_file);
-
-
 }

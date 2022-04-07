@@ -1,6 +1,6 @@
 ########################################## 
 ##
-## Makefile for Assignment No. 3
+## Makefile for Assignment No. 4
 ## LINUX Compilation
 ## KEVIN LY
 ##
@@ -58,8 +58,8 @@ all:
 run:
 	./s1 sphere0.pgm 100 radiusAndCenter.txt
 	./s2 radiusAndCenter.txt sphere1.pgm sphere2.pgm sphere3.pgm outputDirections.txt
-	./s3 outputDirections.txt object1.pgm object2.pgm object3.pgm 10 100 objectout.pgm
-	./s4 outputDirections.txt object1.pgm object2.pgm object3.pgm 100 outaldeo.pgm
+	./s3 outputDirections.txt object1.pgm object2.pgm object3.pgm 10 100 objectOut.pgm
+	./s4 outputDirections.txt object1.pgm object2.pgm object3.pgm 100 outAldeo.pgm
 
 
 # Clean files

@@ -1,6 +1,6 @@
 import cv2
-image1 = cv2.imread("images/8.jpg")
-thresh_val = 70
+image1 = cv2.imread("images/ducc.png")
+thresh_val = 30
 image1[image1 < thresh_val] = 0
 
 ret, thresh3 = cv2.threshold(image1, 250, 255, cv2.THRESH_TRUNC)

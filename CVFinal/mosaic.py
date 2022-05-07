@@ -5,6 +5,10 @@ import PIL
 from PIL import Image
 import matplotlib.pyplot as plt
 from PIL import ImageColor
+from colormath.color_objects import sRGBColor, LabColor
+from colormath.color_conversions import convert_color
+from colormath.color_diff import delta_e_cie2000
+
 
 Lego_colors = []
 def LegoDatabase():
@@ -21,22 +25,17 @@ def convertToPixels(image,size):
     sizeUp = pixelated.resize(img.size,Image.NEAREST)
     sizeUp.save("mosaic.jpg")
 
-def delta_color(pixel):
-    red = []
-    green = []
-    blue = []
-    RGB = []
-    for std_lego_color in Lego_colors:
-        #if pixel[0] < std_lego_color[0] + 5 and pixel[0]  > std_lego_color[0] - 5 and pixel[1] < std_lego_color[1] + 5 and pixel[1]  > std_lego_color[1] - 5 and pixel[2] < std_lego_color[2] + 5 and pixel[2]  > std_lego_color[2] - 5:
-        Rcolor = abs(pixel[0] - std_lego_color[0])
-        red.append(Rcolor)
-        Gcolor = abs(pixel[1] - std_lego_color[1])
-        green.append(Gcolor)
-        Bcolor = abs(pixel[2] - std_lego_color[2])
-        blue.append(Bcolor)
-        RGB.append(Rcolor+Gcolor+Bcolor)
-    closest = min(RGB)
-    return (red[closest],green[closest],blue[closest])
+def findDeltaE(color):
+    lab_color_1 = convert_color(color,LabColor)
+    if(color[0] == 0 and color[1] == 0 and color[2] == 0):
+        return color
+    delta_e_list = []
+    for stdcolor in Lego_colors:
+        lab_color_2 = convert_color(stdcolor,LabColor)
+        delta_e = delta_e_cie2000(lab_color_1, lab_color_2)
+        delta_e_list.append(delta_e)
+    min_delta = min(delta_e_list)
+    return Lego_colors[delta_e_list.index(min_delta)]
 
 
 def reColorLego():
@@ -45,25 +44,17 @@ def reColorLego():
     colors = img.getdata()
     new_image = []
     for pixel in colors:
-        closest_color = delta_color(pixel)
-        new_image.append(closest_color)
-
-            
+        new_color = findDeltaE(pixel)
+        #new_image.append(new_color) # insert new colors here
             
     img.putdata(new_image)
     img.save("reColor.jpg")
 
             
 
-            
-
-
-
 LegoDatabase()
 
 convertToPixels(image="threshold.jpg",size=(70,70))
 
 reColorLego()
-
-
 

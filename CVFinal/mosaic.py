@@ -1,4 +1,5 @@
 import cv2
+import numpy
 import numpy as np
 import imutils
 import PIL
@@ -22,15 +23,15 @@ def LegoDatabase():
 def convertToPixels(image,size):
     img = Image.open("threshold.jpg")
     pixelated = img.resize(size,Image.BILINEAR)
-    sizeUp = pixelated.resize(img.size,Image.NEAREST)
-    sizeUp.save("mosaic.jpg")
+    #sizeUp = pixelated.resize(img.size,Image.NEAREST)
+    pixelated.save("mosaic.jpg")
 
 def findDeltaE(color):
+    color = sRGBColor(color[0],color[1],color[2])
     lab_color_1 = convert_color(color,LabColor)
-    if(color[0] == 0 and color[1] == 0 and color[2] == 0):
-        return color
     delta_e_list = []
     for stdcolor in Lego_colors:
+        stdcolor = sRGBColor(stdcolor[0],stdcolor[1],stdcolor[2])
         lab_color_2 = convert_color(stdcolor,LabColor)
         delta_e = delta_e_cie2000(lab_color_1, lab_color_2)
         delta_e_list.append(delta_e)
@@ -43,10 +44,16 @@ def reColorLego():
     img = img.convert("RGB")
     colors = img.getdata()
     new_image = []
+    count = 0
     for pixel in colors:
-        new_color = findDeltaE(pixel)
-        #new_image.append(new_color) # insert new colors here
-            
+        # if(pixel[0] > 0 and pixel[1] > 0 and pixel[2] > 0):
+        #     new_color = findDeltaE(pixel)
+        #     new_image.append(new_color) # insert new colors here
+        # else:
+        #     new_image.append(pixel)
+        count+= 1
+        new_image.append(())
+        print(count)
     img.putdata(new_image)
     img.save("reColor.jpg")
 
@@ -54,7 +61,7 @@ def reColorLego():
 
 LegoDatabase()
 
-convertToPixels(image="threshold.jpg",size=(70,70))
+convertToPixels(image="threshold.jpg",size=(100,100))
 
 reColorLego()
 
